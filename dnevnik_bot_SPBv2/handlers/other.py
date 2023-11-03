@@ -1,0 +1,143 @@
+import requests
+import datetime
+
+from dotenv import load_dotenv
+
+import os
+
+from config import API_HOST, API_PORT
+
+API_URL = f"{API_HOST}:{API_PORT}"
+
+current_year = datetime.datetime.now().year
+next_year = current_year + 1
+
+dates = {
+    1: (f'1.09.{current_year}', f'26.10.{current_year}'),
+    2: (f'5.11.{current_year}', f'28.12.{current_year}'),
+    3: (f'09.01.{next_year}', f'23.03.{next_year}'),
+    4: (f'03.04.{next_year}', f'31.05.{next_year}')
+}
+
+
+def user_exists(id_tg):
+    response = requests.get(f'{API_URL}/user/by_id_tg?tg_id={id_tg}')
+    return response.status_code == 200
+
+
+def add_user(id_tg):
+    response = requests.post(f'{API_URL}/user/?id_tg={id_tg}')
+    return response.status_code == 200
+
+
+def get_user_info(id_tg):
+    response = requests.get(f'{API_URL}/user/by_id_tg?tg_id={id_tg}')
+    if response.status_code != 200:
+        add_user_response = requests.post(f'{API_HOST}/user/?id_tg={id_tg}')
+        if add_user_response != 200:
+            return None
+    return response.json()
+
+
+def get_clean_user_info(user_info):
+    group_id: str = f'Ваш group_id: {user_info.get("group_id")}'
+    education_id: str = f'Ваш education_id: {user_info.get("education_id")}'
+
+    res = '\n'.join((group_id, education_id))
+    return res
+
+
+def save_user_info(id_tg: int, user_info: dict):
+    response = requests.post(f'{API_URL}/user/update?id_tg={id_tg}', json=user_info)
+    return response.status_code == 200
+
+
+# def sort_marks(data: dict, name_period):
+#     return (
+#         _sort_year(data, name_period)
+#         if name_period == 1
+#         else _sort_quater(data, data, name_period)
+#     )
+
+
+def _sort_quater(data, sort_result, name_period):
+    finals_average = data['finals_average_q']
+    result = f'{name_period}\n\n'
+    for subject, subject_data in sort_result.items():
+        if subject != 'finals_average_q':
+            average = subject_data['average'][0]
+            count = subject_data['count_marks'][0]
+            final_m = ''
+            if subject_data['final_q']:
+                final_m = '=> ' + str(subject_data['final_q'][0])
+            last_3 = ' '.join(list(map(str, subject_data['last_three'])))
+            result += f'<i>{subject}</i>  {last_3}  ({count})  <i>{average}</i> {final_m}\n'
+    if finals_average:
+        result += f'\nСр. балл аттестации - {finals_average}'
+    return (
+        result.replace('Основы безопасности жизнедеятельности', 'ОБЖ')
+        .replace('Изобразительное искусство', 'ИЗО')
+        .replace('Физическая культура', 'Физ-ра')
+        .replace('Иностранный язык (английский)', 'Английский язык')
+        .replace('История России. Всеобщая история', 'История')
+        .replace('Алгебра и начала математического анализа', 'Алгебра')
+    )
+
+
+def _sort_year(sort_result, name_period):
+    result = f'{name_period}\n\n'
+    all_finals_q = sort_result['finals_average_q']
+    all_finals_y = sort_result['finals_average_y']
+    for subject, sub_data in sort_result.items():
+        if subject not in ['finals_average_q', 'finals_average_y']:
+            finals_q = ' '.join(map(str, sub_data['final_q'][::-1]))
+            finals_y = "=> " + str(sub_data['final_years'][0]) if sub_data['final_years'] else ''
+            final = "| " + str(sub_data['final'][0]) if sub_data['final'] else ''
+            result += f"<i>{subject}</i>  {sub_data['average'][0]} ({sub_data['count_marks'][0]}) {finals_q} {finals_y} {final}\n"
+    if all_finals_q:
+        result += f'\nСр. балл годовой аттестации - {all_finals_q}'
+    if all_finals_y:
+        result += f'\nСр. балл итоговой аттестации - {all_finals_y}'
+    return (
+        result.replace('Основы безопасности жизнедеятельности', 'ОБЖ')
+        .replace('Изобразительное искусство', 'ИЗО')
+        .replace('Физическая культура', 'Физ-ра')
+        .replace('Иностранный язык (английский)', 'Английский язык')
+        .replace('История России. Всеобщая история', 'История')
+        .replace('Иностранный язык (английский язык)', 'Английский язык')
+    )
+
+
+def get_marks_quater(id_tg: int, quater: int):
+    date_from, date_to = dates[quater]
+    response = requests.get(f'{API_URL}/marks/?id_tg={id_tg}&date_from={date_from}&date_to={date_to}')
+    if response:
+        marks = response.json().get('result')
+        if marks:
+            return _sort_quater(marks, marks, f'{quater} четверть') if response.status_code == 200 else 'Ошибка...'
+    return f'Нет оценок за {quater}-ую четверть'
+
+
+def get_marks_half(id_tg: int, half: int):
+    if half == 1:
+        date_from = dates[1][0]
+        date_to = dates[2][1]
+    else:
+        date_from = dates[3][0]
+        date_to = dates[4][1]
+    response = requests.get(f'{API_URL}/marks/?id_tg={id_tg}&date_from={date_from}&date_to={date_to}')
+    marks = response.json().get('result')
+    if marks:
+        return _sort_quater(marks, marks, f'{half} полугодие') if response.status_code == 200 else 'Ошибка...'
+    return f'Нет оценок за {half}-ое полугодие'
+
+
+def get_marks_year(id_tg: int):
+    date_from = dates[1][0]
+    date_to = dates[4][1]
+    response = requests.get(f'{API_URL}/marks/?id_tg={id_tg}&date_from={date_from}&date_to={date_to}')
+    marks = response.json().get('result')
+    if marks:
+        return _sort_year(marks, f'Год') if response.status_code == 200 else 'Ошибка...'
+    return f'Нет оценок за год'
+
