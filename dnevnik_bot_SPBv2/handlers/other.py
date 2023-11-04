@@ -60,6 +60,18 @@ def save_user_info(id_tg: int, user_info: dict):
 #     )
 
 
+def _abbreviation(marks_res: str):
+    return (
+        marks_res.replace('Основы безопасности жизнедеятельности', 'ОБЖ')
+        .replace('Изобразительное искусство', 'ИЗО')
+        .replace('Физическая культура', 'Физ-ра')
+        .replace('Иностранный язык (английский)', 'Английский язык')
+        .replace('История России. Всеобщая история', 'История')
+        .replace('Иностранный язык (английский язык)', 'Английский язык')
+        .replace('Алгебра и начала математического анализа', 'Алгебра')
+    )
+
+
 def _sort_quater(data, sort_result, name_period):
     finals_average = data['finals_average_q']
     result = f'{name_period}\n\n'
@@ -74,14 +86,7 @@ def _sort_quater(data, sort_result, name_period):
             result += f'<i>{subject}</i>  {last_3}  ({count})  <i>{average}</i> {final_m}\n'
     if finals_average:
         result += f'\nСр. балл аттестации - {finals_average}'
-    return (
-        result.replace('Основы безопасности жизнедеятельности', 'ОБЖ')
-        .replace('Изобразительное искусство', 'ИЗО')
-        .replace('Физическая культура', 'Физ-ра')
-        .replace('Иностранный язык (английский)', 'Английский язык')
-        .replace('История России. Всеобщая история', 'История')
-        .replace('Алгебра и начала математического анализа', 'Алгебра')
-    )
+    return _abbreviation(result)
 
 
 def _sort_year(sort_result, name_period):
@@ -98,14 +103,7 @@ def _sort_year(sort_result, name_period):
         result += f'\nСр. балл годовой аттестации - {all_finals_q}'
     if all_finals_y:
         result += f'\nСр. балл итоговой аттестации - {all_finals_y}'
-    return (
-        result.replace('Основы безопасности жизнедеятельности', 'ОБЖ')
-        .replace('Изобразительное искусство', 'ИЗО')
-        .replace('Физическая культура', 'Физ-ра')
-        .replace('Иностранный язык (английский)', 'Английский язык')
-        .replace('История России. Всеобщая история', 'История')
-        .replace('Иностранный язык (английский язык)', 'Английский язык')
-    )
+    return _abbreviation(result)
 
 
 def get_marks_quater(id_tg: int, quater: int):

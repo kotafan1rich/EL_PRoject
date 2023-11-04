@@ -1,27 +1,38 @@
-version: "3"
+version: "3.7"
 services:
   bot:
     container_name: bot
     build: ./dnevnik_bot_SPBv2
+    restart: always
     networks:
       - api_bot
     environment:
-      - ./dnevnik_bot_SPBv2/.env
+      - TOKEN=5439011304:AAGF_03sJSmc8GR7gkUhjG_3SEvadUPz3oI
+      - TEST_TOKEN=5824617627:AAHaZCgjnIFuQIWk8h49yyvlsnlI7K9Ia4g
+      - API_HOST=http://api
+      - API_PORT=8000
+      - DEBUG=False
     depends_on:
       - db
 
   api:
     container_name: api
     build: ./fastApiEL
+    restart: always
     networks:
       - api_bot
     environment:
-      - ./fastApiEL/.env
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_NAME=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_HOST=db
     command: ["/fastapi_app/docker/api.sh"]
     expose:
       - 8000
     depends_on:
       - db
+      - bot
     ports:
       - "8000:8000"
 
@@ -35,11 +46,10 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
       - POSTGRES_DB=postgres
-    command: -p 5430
     expose:
-      - 5430
+      - 5432
     ports:
-      - "5430:5430"
+      - "5432:5432"
 
 networks:
   api_bot:

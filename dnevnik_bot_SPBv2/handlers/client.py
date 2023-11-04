@@ -4,10 +4,10 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 
 from create_bot import bot
-from keyboards import kb_client_main, kb_client_settings, education_id_b, group_id_b, group_name_b, settings_b, \
+from keyboards import kb_client_main, kb_client_settings, education_id_b, group_id_b, settings_b, \
     change_info_b, kb_client_set_params, save_b, cancel_b, quater_4_b, quater_3_b, \
     quater_2_b, quater_1_b, half_2_b, half_1_b, year_b, help_b, change_jwt_b
-from messages import HELP, SETTINGS, ERROR_MES, CHANGE_JWT, ADDED
+from messages import HELP, SETTINGS, ERROR_MES, CHANGE_JWT, ADDED, CANCELED
 
 from .other import user_exists, add_user, get_user_info, get_clean_user_info, save_user_info, get_marks_quater, \
     get_marks_half, get_marks_year
@@ -20,7 +20,6 @@ class FSMSettings(StatesGroup):
     change_info = State()
     education_id = State()
     group_id = State()
-    group_name = State()
     jwt_token = State()
 
 
@@ -74,8 +73,6 @@ async def set_settings(message: types.Message, state: FSMContext):
             await state.set_state(FSMSettings.education_id)
         elif param == group_id_b.text:
             await state.set_state(FSMSettings.group_id)
-        elif param == group_name_b.text:
-            await state.set_state(FSMSettings.group_name)
         else:
             return await state.clear()
         await bot.send_message(message.from_user.id,
@@ -97,13 +94,6 @@ async def set_group_id(message: types.Message, state: FSMContext):
                            reply_markup=kb_client_set_params)
 
 
-async def set_group_name(message: types.Message, state: FSMContext):
-    await state.update_data(group_name=int(message.text[:2]))
-    await state.set_state(FSMSettings.change_info)
-    await bot.send_message(message.from_user.id, f'Установленно, не забудьте сохранить',
-                           reply_markup=kb_client_set_params)
-
-
 async def cancel_handler(message: types.Message, state: FSMContext) -> None:
 
     current_state = await state.get_state()
@@ -112,7 +102,7 @@ async def cancel_handler(message: types.Message, state: FSMContext) -> None:
     else:
         await state.clear()
     await message.answer(
-        "Cancelled.",
+        CANCELED,
         reply_markup=kb_client_main,
     )
 
@@ -165,10 +155,9 @@ def register_handlers_client(dp: Dispatcher):
     dp.message.register(cancel_handler, F.text == cancel_b.text)
     dp.message.register(get_settings, F.text == settings_b.text)
     dp.message.register(change_info, F.text == change_info_b.text)
-    dp.message.register(set_settings, F.text.in_((education_id_b.text, group_id_b.text, group_name_b.text, save_b.text)))
+    dp.message.register(set_settings, F.text.in_((education_id_b.text, group_id_b.text, save_b.text)))
     dp.message.register(set_education_id, FSMSettings.education_id)
     dp.message.register(set_group_id, FSMSettings.group_id)
-    dp.message.register(set_group_name, FSMSettings.group_name)
     dp.message.register(get_marks_quater_handler, F.text.in_((quater_1_b.text, quater_2_b.text, quater_3_b.text, quater_4_b.text)))
     dp.message.register(get_marks_half_handler, F.text.in_((half_1_b.text, half_2_b.text)))
     dp.message.register(get_marks_year_handler, F.text == year_b.text)

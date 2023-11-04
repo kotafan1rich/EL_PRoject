@@ -13,7 +13,6 @@ cancel_b = KeyboardButton(text='Отмена')
 change_info_b = KeyboardButton(text='Изменить информацию')
 education_id_b = KeyboardButton(text='education_id')
 group_id_b = KeyboardButton(text='group_id')
-group_name_b = KeyboardButton(text='group_name')
 save_b = KeyboardButton(text='Сохранить')
 change_jwt_b = KeyboardButton(text='Изменить jwt')
 
@@ -32,7 +31,7 @@ kb_client_settings_bottms = [
 ]
 
 kb_client_set_params_bottms = [
-    [education_id_b, group_id_b, group_name_b],
+    [education_id_b, group_id_b],
     [save_b],
     [cancel_b]
 ]

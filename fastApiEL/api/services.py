@@ -88,7 +88,7 @@ class Mark:
                     if estimate_type_name_split in ['четверть', ]:
                         marks[subject_name]['final_q'].append(int(estimate_value_name))
                     elif estimate_type_name_split in ['Годовая']:
-                        marks[subject_name]['final_years'].append(int((estimate_value_name)))
+                        marks[subject_name]['final_years'].append(int(estimate_value_name))
                     elif estimate_type_name_split in ['Итоговая']:
                         marks[subject_name]['final'].append(int(estimate_value_name))
                     elif estimate_type_name_split in ['Экзамен']:
