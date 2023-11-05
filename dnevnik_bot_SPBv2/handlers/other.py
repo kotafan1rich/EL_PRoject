@@ -1,7 +1,6 @@
 import datetime
 
 import aiohttp
-OK
 
 from config import API_HOST, API_PORT, API_URL
 
