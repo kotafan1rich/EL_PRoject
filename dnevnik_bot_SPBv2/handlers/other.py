@@ -40,10 +40,10 @@ async def get_user_info(id_tg):
         }
         async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
             if response.status == 404:
-                async with session.post(f'{API_URL}/user', json=json) as add_user_response:
-                    if add_user_response.status == 200:
-                        async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response_finall:
-                            return await response_finall.json()
+                add_user_response = await add_user(id_tg)
+                if add_user_response:
+                    async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response_finall:
+                        return await response_finall.json()
             return await response.json()
 
 
@@ -56,7 +56,8 @@ def get_clean_user_info(user_info):
 
 async def save_user_info(id_tg: int, user_info: dict):
     async with aiohttp.ClientSession() as session:
-        async with session.get(f'{API_URL}/user/update?id_tg={id_tg}', json=user_info) as response:
+        json = user_info | {'id_tg': id_tg}
+        async with session.get(f'{API_URL}/user/update', json=json) as response:
             return response.status == 200
 
 
