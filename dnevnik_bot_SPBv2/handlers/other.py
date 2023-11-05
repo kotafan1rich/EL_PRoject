@@ -30,7 +30,7 @@ async def add_user(id_tg):
             'id_tg': str(id_tg)
         }
         async with session.post(f'{API_URL}/user', params=params) as response:
-            return response.status == 200
+            return response.status
 
 
 async def get_user_info(id_tg):

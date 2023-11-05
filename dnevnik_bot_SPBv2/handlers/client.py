@@ -26,8 +26,7 @@ class FSMSettings(StatesGroup):
 async def start(message: types.Message):
     user_id = message.from_user.id
     await bot.send_message(user_id, str(await add_user(user_id)), reply_markup=kb_client_main, parse_mode=None)
-    if not await user_exists(user_id):
-        await add_user(user_id)
+    if not await user_exists(user_id) and await add_user(user_id):
         await bot.send_message(user_id, f'Здравствуйте\n\n{HELP}', reply_markup=kb_client_main)
     else:
         await bot.send_message(user_id, HELP, reply_markup=kb_client_main, parse_mode=None)
