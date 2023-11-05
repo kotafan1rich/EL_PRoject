@@ -27,7 +27,7 @@ async def user_exists(id_tg):
 async def add_user(id_tg):
     async with aiohttp.ClientSession() as session:
         params = {
-            'id_tg': id_tg
+            'id_tg': str(id_tg)
         }
         async with session.post(f'{API_URL}/user', params=params) as response:
             return response.status == 200
