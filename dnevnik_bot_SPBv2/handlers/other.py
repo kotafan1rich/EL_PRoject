@@ -18,7 +18,7 @@ dates = {
 async def user_exists(id_tg):
     async with aiohttp.ClientSession() as session:
         json = {
-            'id_tg': id_tg
+            'tg_id': id_tg
         }
         async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
             return response.status == 200
@@ -27,7 +27,7 @@ async def user_exists(id_tg):
 async def add_user(id_tg):
     async with aiohttp.ClientSession() as session:
         json = {
-            'id_tg': id_tg
+            'tg_id': id_tg
         }
         async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
             return response.status == 200
@@ -36,7 +36,7 @@ async def add_user(id_tg):
 async def get_user_info(id_tg):
     async with aiohttp.ClientSession() as session:
         json = {
-            'id_tg': id_tg
+            'tg_id': id_tg
         }
         async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
             if response.status != 200:
