@@ -29,7 +29,7 @@ async def add_user(id_tg):
         json = {
             'tg_id': id_tg
         }
-        async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
+        async with session.post(f'{API_URL}/user', json=json) as response:
             return response.status == 200
 
 
