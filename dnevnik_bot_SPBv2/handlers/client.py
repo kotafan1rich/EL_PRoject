@@ -63,7 +63,7 @@ async def set_settings(message: types.Message, state: FSMContext):
         params = await state.get_data()
         res = await save_user_info(id_tg=message.from_user.id, user_info=params)
         text = ADDED if res else ERROR_MES
-        await bot.send_message(message.from_user.id, text,
+        await bot.send_message(message.from_user.id, res,
                                reply_markup=kb_client_main)
         await state.clear()
 

@@ -58,7 +58,7 @@ async def save_user_info(id_tg: int, user_info: dict):
     async with aiohttp.ClientSession() as session:
         json = user_info | {'id_tg': id_tg}
         async with session.get(f'{API_URL}/user/update', json=json) as response:
-            return response.status == 200
+            return response.status
 
 
 def _abbreviation(marks_res: str):
