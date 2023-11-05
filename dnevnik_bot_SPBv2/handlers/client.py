@@ -25,7 +25,6 @@ class FSMSettings(StatesGroup):
 
 async def start(message: types.Message):
     user_id = message.from_user.id
-    await bot.send_message(user_id, str(await add_user(user_id)), reply_markup=kb_client_main, parse_mode=None)
     if not await user_exists(user_id) and await add_user(user_id):
         await bot.send_message(user_id, f'Здравствуйте\n\n{HELP}', reply_markup=kb_client_main)
     else:
@@ -54,7 +53,7 @@ async def set_settings(message: types.Message, state: FSMContext):
         params = await state.get_data()
         res = await save_user_info(id_tg=message.from_user.id, user_info=params)
         text = ADDED if res else ERROR_MES
-        await bot.send_message(message.from_user.id, str(res),
+        await bot.send_message(message.from_user.id, text,
                                reply_markup=kb_client_main)
         await state.clear()
 
