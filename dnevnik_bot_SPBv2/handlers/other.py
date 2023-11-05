@@ -56,7 +56,7 @@ def get_clean_user_info(user_info):
 
 async def save_user_info(id_tg: int, user_info: dict):
     async with aiohttp.ClientSession() as session:
-        async with session.post(f'{API_URL}/user/update?id_tg={id_tg}', json_data=user_info) as response:
+        async with session.post(f'{API_URL}/user/update?id_tg={id_tg}', json=user_info) as response:
             return response.status
 
 
