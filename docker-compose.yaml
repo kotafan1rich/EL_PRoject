@@ -39,6 +39,7 @@ services:
   db:
     container_name: "db"
     image: postgres:16-alpine
+    restart: always
     networks:
       - api_bot
     environment:
