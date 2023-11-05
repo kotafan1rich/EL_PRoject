@@ -17,32 +17,32 @@ dates = {
 
 async def user_exists(id_tg):
     async with aiohttp.ClientSession() as session:
-        json = {
+        params = {
             'tg_id': id_tg
         }
-        async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
+        async with session.get(f'{API_URL}/user/by_id_tg', params=params) as response:
             return response.status == 200
 
 
 async def add_user(id_tg):
     async with aiohttp.ClientSession() as session:
-        json = {
+        params = {
             'tg_id': id_tg
         }
-        async with session.post(f'{API_URL}/user', json=json) as response:
+        async with session.post(f'{API_URL}/user', params=params) as response:
             return response.status == 200
 
 
 async def get_user_info(id_tg):
     async with aiohttp.ClientSession() as session:
-        json = {
+        params = {
             'tg_id': id_tg
         }
-        async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
+        async with session.get(f'{API_URL}/user/by_id_tg', params=params) as response:
             if response.status == 404:
                 add_user_response = await add_user(id_tg)
                 if add_user_response:
-                    async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response_finall:
+                    async with session.get(f'{API_URL}/user/by_id_tg', params=params) as response_finall:
                         return await response_finall.json()
             return await response.json()
 
@@ -56,7 +56,8 @@ def get_clean_user_info(user_info):
 
 async def save_user_info(id_tg: int, user_info: dict):
     async with aiohttp.ClientSession() as session:
-        async with session.post(f'{API_URL}/user/update?id_tg={id_tg}', json=user_info) as response:
+        params = {'id_tg': id_tg}
+        async with session.post(f'{API_URL}/user/update', params=params, json=user_info) as response:
             return response.status
 
 

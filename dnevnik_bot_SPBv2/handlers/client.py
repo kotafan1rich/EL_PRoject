@@ -23,19 +23,11 @@ class FSMSettings(StatesGroup):
     jwt_token = State()
 
 
-# async def get_message(message: types.Message, quater: str):
-#     # wait_message = None
-#     # res = ERROR_MES
-#     wait_message = await bot.send_message(message.chat.id, 'Подожди...')
-#     # res = other.get_m_result(quater=quater, user_id=message.from_user.id)
-#     res = ''
-#     await bot.edit_message_text(chat_id=message.from_user.id, message_id=wait_message.message_id, text=res)
-
-
 async def start(message: types.Message):
     user_id = message.from_user.id
-
-    if not await user_exists(user_id) and await add_user(user_id):
+    await bot.send_message(user_id, str(await user_exists(user_id)), reply_markup=kb_client_main, parse_mode=None)
+    if not await user_exists(user_id):
+        await add_user(user_id)
         await bot.send_message(user_id, f'Здравствуйте\n\n{HELP}', reply_markup=kb_client_main)
     else:
         await bot.send_message(user_id, HELP, reply_markup=kb_client_main, parse_mode=None)
