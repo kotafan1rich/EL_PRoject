@@ -38,11 +38,12 @@ async def get_user_info(id_tg):
         json = {
             'tg_id': id_tg
         }
-        async with session.get(f'{API_URL}/user/by_id_tg?tg_id={id_tg}') as response:
-            if response.status != 200:
-                async with session.post(f'{API_URL}/user?tg_id={id_tg}') as add_user_response:
-                    if add_user_response.status != 200:
-                        return None
+        async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
+            if response.status == 404:
+                async with session.post(f'{API_URL}/user', json=json) as add_user_response:
+                    if add_user_response.status == 200:
+                        async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response_finall:
+                            return await response_finall.json()
             return await response.json()
 
 
