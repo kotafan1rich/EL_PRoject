@@ -1,13 +1,8 @@
-import requests
 import datetime
 
-from dotenv import load_dotenv
+import aiohttp
 
-import os
-
-from config import API_HOST, API_PORT
-
-API_URL = f"{API_HOST}:{API_PORT}"
+from config import API_HOST, API_PORT, API_URL
 
 current_year = datetime.datetime.now().year
 next_year = current_year + 1
@@ -20,44 +15,51 @@ dates = {
 }
 
 
-def user_exists(id_tg):
-    response = requests.get(f'{API_URL}/user/by_id_tg?tg_id={id_tg}')
-    return response.status_code == 200
+async def user_exists(id_tg):
+    async with aiohttp.ClientSession() as session:
+        json = {
+            'tg_id': id_tg
+        }
+        async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
+            return response.status == 200
 
 
-def add_user(id_tg):
-    response = requests.post(f'{API_URL}/user/?id_tg={id_tg}')
-    return response.status_code == 200
+async def add_user(id_tg):
+    async with aiohttp.ClientSession() as session:
+        json = {
+            'tg_id': id_tg
+        }
+        async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
+            return response.status == 200
 
 
-def get_user_info(id_tg):
-    response = requests.get(f'{API_URL}/user/by_id_tg?tg_id={id_tg}')
-    if response.status_code != 200:
-        add_user_response = requests.post(f'{API_HOST}/user/?id_tg={id_tg}')
-        if add_user_response != 200:
-            return None
-    return response.json()
+async def get_user_info(id_tg):
+    async with aiohttp.ClientSession() as session:
+        json = {
+            'tg_id': id_tg
+        }
+        async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
+            if response.status != 200:
+                async with session.post(f'{API_URL}/user/by_id_tg', json=json) as add_user_response:
+                    if add_user_response != 200:
+                        return None
+            return await response.json()
 
 
 def get_clean_user_info(user_info):
-    group_id: str = f'Ваш group_id: {user_info.get("group_id")}'
-    education_id: str = f'Ваш education_id: {user_info.get("education_id")}'
+    if user_info:
+        group_id: str = f'Ваш group_id: {user_info.get("group_id")}'
+        education_id: str = f'Ваш education_id: {user_info.get("education_id")}'
 
-    res = '\n'.join((group_id, education_id))
-    return res
-
-
-def save_user_info(id_tg: int, user_info: dict):
-    response = requests.post(f'{API_URL}/user/update?id_tg={id_tg}', json=user_info)
-    return response.status_code == 200
+        res = '\n'.join((education_id, group_id))
+        return res
+    return user_info
 
 
-# def sort_marks(data: dict, name_period):
-#     return (
-#         _sort_year(data, name_period)
-#         if name_period == 1
-#         else _sort_quater(data, data, name_period)
-#     )
+async def save_user_info(id_tg: int, user_info: dict):
+    async with aiohttp.ClientSession() as session:
+        async with session.get(f'{API_URL}/user/update?id_tg={id_tg}', json=user_info) as response:
+            return response.status == 200
 
 
 def _abbreviation(marks_res: str):
@@ -106,36 +108,57 @@ def _sort_year(sort_result, name_period):
     return _abbreviation(result)
 
 
-def get_marks_quater(id_tg: int, quater: int):
+async def get_marks_quater(id_tg: int, quater: int):
     date_from, date_to = dates[quater]
-    response = requests.get(f'{API_URL}/marks/?id_tg={id_tg}&date_from={date_from}&date_to={date_to}')
-    if response:
-        marks = response.json().get('result')
-        if marks:
-            return _sort_quater(marks, marks, f'{quater} четверть') if response.status_code == 200 else 'Ошибка...'
-    return f'Нет оценок за {quater}-ую четверть'
+    async with aiohttp.ClientSession() as session:
+        json_data = {
+            'id_tg': id_tg,
+            'date_from': date_from,
+            'date_to': date_to
+        }
+        async with session.get(f'{API_URL}/marks', json=json_data) as response:
+            if response:
+                json = await response.json()
+                marks = json.get('result')
+                if marks:
+                    return _sort_quater(marks, marks, f'{quater} четверть') if response.status == 200 else 'Ошибка...'
+            return f'Нет оценок за {quater}-ую четверть'
 
 
-def get_marks_half(id_tg: int, half: int):
+async def get_marks_half(id_tg: int, half: int):
     if half == 1:
         date_from = dates[1][0]
         date_to = dates[2][1]
     else:
         date_from = dates[3][0]
         date_to = dates[4][1]
-    response = requests.get(f'{API_URL}/marks/?id_tg={id_tg}&date_from={date_from}&date_to={date_to}')
-    marks = response.json().get('result')
-    if marks:
-        return _sort_quater(marks, marks, f'{half} полугодие') if response.status_code == 200 else 'Ошибка...'
-    return f'Нет оценок за {half}-ое полугодие'
+    async with aiohttp.ClientSession() as session:
+        json_data = {
+            'id_tg': id_tg,
+            'date_from': date_from,
+            'date_to': date_to
+        }
+        async with session.get(f'{API_URL}/marks', json=json_data) as response:
+            json = await response.json()
+            marks = json.get('result')
+            if marks:
+                return _sort_quater(marks, marks, f'{half} полугодие') if response.status == 200 else 'Ошибка...'
+            return f'Нет оценок за {half}-ое полугодие'
 
 
-def get_marks_year(id_tg: int):
+async def get_marks_year(id_tg: int):
     date_from = dates[1][0]
     date_to = dates[4][1]
-    response = requests.get(f'{API_URL}/marks/?id_tg={id_tg}&date_from={date_from}&date_to={date_to}')
-    marks = response.json().get('result')
-    if marks:
-        return _sort_year(marks, f'Год') if response.status_code == 200 else 'Ошибка...'
-    return f'Нет оценок за год'
+    async with aiohttp.ClientSession() as session:
+        json_data = {
+            'id_tg': id_tg,
+            'date_from': date_from,
+            'date_to': date_to
+        }
+        async with session.get(f'{API_URL}/marks', json=json_data) as response:
+            json = await response.json()
+            marks = json.get('result')
+            if marks:
+                return _sort_year(marks, f'Год') if response.status == 200 else 'Ошибка...'
+            return f'Нет оценок за год'
 

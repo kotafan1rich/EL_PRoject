@@ -35,14 +35,14 @@ class FSMSettings(StatesGroup):
 async def start(message: types.Message):
     user_id = message.from_user.id
 
-    if not user_exists(user_id) and add_user(user_id):
+    if not await user_exists(user_id) and await add_user(user_id):
         await bot.send_message(user_id, f'Здравствуйте\n\n{HELP}', reply_markup=kb_client_main)
     else:
         await bot.send_message(user_id, HELP, reply_markup=kb_client_main, parse_mode=None)
 
 
 async def get_settings(message: types.Message, state: FSMContext):
-    user_info: dict = get_user_info(message.from_user.id)
+    user_info: dict = await get_user_info(message.from_user.id)
     clean_user_info: str = get_clean_user_info(user_info)
 
     await state.set_state(FSMSettings.user_info)
@@ -62,7 +62,7 @@ async def set_settings(message: types.Message, state: FSMContext):
 
     if param == save_b.text:
         params = await state.get_data()
-        res = save_user_info(id_tg=message.from_user.id, user_info=params)
+        res = await save_user_info(id_tg=message.from_user.id, user_info=params)
         text = ADDED if res else ERROR_MES
         await bot.send_message(message.from_user.id, text,
                                reply_markup=kb_client_main)
@@ -95,7 +95,6 @@ async def set_group_id(message: types.Message, state: FSMContext):
 
 
 async def cancel_handler(message: types.Message, state: FSMContext) -> None:
-
     current_state = await state.get_state()
     if current_state is None:
         pass
@@ -110,19 +109,19 @@ async def cancel_handler(message: types.Message, state: FSMContext) -> None:
 async def get_marks_quater_handler(message: types.Message):
     text = message.text
     quater = int(text.split()[0])
-    marks = get_marks_quater(message.from_user.id, quater)
+    marks = await get_marks_quater(message.from_user.id, quater)
     await bot.send_message(message.from_user.id, marks, reply_markup=kb_client_main)
 
 
 async def get_marks_half_handler(message: types.Message):
     text = message.text
     half: int = int(text.split()[0])
-    marks = get_marks_half(message.from_user.id, half)
+    marks = await get_marks_half(message.from_user.id, half)
     await bot.send_message(message.from_user.id, marks, reply_markup=kb_client_main)
 
 
 async def get_marks_year_handler(message: types.Message):
-    marks = get_marks_year(message.from_user.id)
+    marks = await get_marks_year(message.from_user.id)
     await bot.send_message(message.from_user.id, marks, reply_markup=kb_client_main)
 
 
@@ -138,7 +137,7 @@ async def get_jwt(message: types.Message, state: FSMContext):
     data = {
         'jwt_token': jwt,
     }
-    res = save_user_info(id_tg=id_tg, user_info=data)
+    res = await save_user_info(id_tg=id_tg, user_info=data)
     if res:
         await bot.send_message(id_tg, ADDED, reply_markup=kb_client_main)
     else:
