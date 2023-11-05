@@ -1,6 +1,7 @@
 import datetime
 
 import aiohttp
+OK
 
 from config import API_HOST, API_PORT, API_URL
 
@@ -18,7 +19,7 @@ dates = {
 async def user_exists(id_tg):
     async with aiohttp.ClientSession() as session:
         json = {
-            'tg_id': id_tg
+            'id_tg': id_tg
         }
         async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
             return response.status == 200
@@ -27,7 +28,7 @@ async def user_exists(id_tg):
 async def add_user(id_tg):
     async with aiohttp.ClientSession() as session:
         json = {
-            'tg_id': id_tg
+            'id_tg': id_tg
         }
         async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
             return response.status == 200
@@ -36,24 +37,21 @@ async def add_user(id_tg):
 async def get_user_info(id_tg):
     async with aiohttp.ClientSession() as session:
         json = {
-            'tg_id': id_tg
+            'id_tg': id_tg
         }
         async with session.get(f'{API_URL}/user/by_id_tg', json=json) as response:
             if response.status != 200:
                 async with session.post(f'{API_URL}/user/by_id_tg', json=json) as add_user_response:
-                    if add_user_response != 200:
+                    if add_user_response.status != 200:
                         return None
             return await response.json()
 
 
 def get_clean_user_info(user_info):
-    if user_info:
-        group_id: str = f'Ваш group_id: {user_info.get("group_id")}'
-        education_id: str = f'Ваш education_id: {user_info.get("education_id")}'
-
-        res = '\n'.join((education_id, group_id))
-        return res
-    return user_info
+    group_id: str = f'Ваш group_id: {user_info.get("group_id")}'
+    education_id: str = f'Ваш education_id: {user_info.get("education_id")}'
+    res = '\n'.join((education_id, group_id))
+    return res
 
 
 async def save_user_info(id_tg: int, user_info: dict):
