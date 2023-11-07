@@ -40,6 +40,8 @@ services:
     container_name: "db"
     image: postgres:16.0
     restart: always
+    volumes:
+      - .:/docker-entrypoint-initdb.d
     networks:
       - api_bot
     environment:
