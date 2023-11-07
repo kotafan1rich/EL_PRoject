@@ -110,12 +110,12 @@ def _sort_year(sort_result, name_period):
 async def get_marks_quater(id_tg: int, quater: int):
     date_from, date_to = dates[quater]
     async with aiohttp.ClientSession() as session:
-        json_data = {
+        params = {
             'id_tg': id_tg,
             'date_from': date_from,
             'date_to': date_to
         }
-        async with session.get(f'{API_URL}/marks', json=json_data) as response:
+        async with session.get(f'{API_URL}/marks', params=params) as response:
             if response:
                 json = await response.json()
                 marks = json.get('result')
@@ -132,12 +132,12 @@ async def get_marks_half(id_tg: int, half: int):
         date_from = dates[3][0]
         date_to = dates[4][1]
     async with aiohttp.ClientSession() as session:
-        json_data = {
+        params = {
             'id_tg': id_tg,
             'date_from': date_from,
             'date_to': date_to
         }
-        async with session.get(f'{API_URL}/marks', json=json_data) as response:
+        async with session.get(f'{API_URL}/marks', params=params) as response:
             json = await response.json()
             marks = json.get('result')
             if marks:
@@ -149,12 +149,12 @@ async def get_marks_year(id_tg: int):
     date_from = dates[1][0]
     date_to = dates[4][1]
     async with aiohttp.ClientSession() as session:
-        json_data = {
+        params = {
             'id_tg': id_tg,
             'date_from': date_from,
             'date_to': date_to
         }
-        async with session.get(f'{API_URL}/marks', json=json_data) as response:
+        async with session.get(f'{API_URL}/marks', params=params) as response:
             json = await response.json()
             marks = json.get('result')
             if marks:
