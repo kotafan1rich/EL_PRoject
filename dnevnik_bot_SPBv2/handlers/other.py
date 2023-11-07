@@ -119,9 +119,9 @@ async def get_marks_quater(id_tg: int, quater: int):
             if response:
                 json = await response.json()
                 marks = json.get('result')
-                # if marks:
-                return _sort_quater(marks, marks, f'{quater} четверть') if response.status == 200 else str(response.status)
-            # return f'Нет оценок за {quater}-ую четверть'
+                if marks:
+                    return _sort_quater(marks, marks, f'{quater} четверть') if response.status == 200 else 'Ошибка...'
+            return f'Нет оценок за {quater}-ую четверть'
 
 
 async def get_marks_half(id_tg: int, half: int):
