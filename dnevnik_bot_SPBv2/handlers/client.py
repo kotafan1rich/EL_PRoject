@@ -96,10 +96,15 @@ async def cancel_handler(message: types.Message, state: FSMContext) -> None:
 
 
 async def get_marks_quater_handler(message: types.Message):
+    id_tg = message.from_user.id
     text = message.text
     quater = int(text.split()[0])
-    marks = await get_marks_quater(message.from_user.id, quater)
-    await bot.send_message(message.from_user.id, marks, reply_markup=kb_client_main)
+    user_info = await get_user_info(id_tg)
+    if all(user_info.values()):
+        marks = await get_marks_quater(id_tg, quater)
+        await bot.send_message(id_tg, marks, reply_markup=kb_client_main)
+    else:
+        await bot.send_message(id_tg, 'MES_NOT_ADDED_SETTINGS', reply_markup=kb_client_main)
 
 
 async def get_marks_half_handler(message: types.Message):

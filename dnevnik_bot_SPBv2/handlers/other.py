@@ -33,7 +33,7 @@ async def add_user(id_tg):
             return response.status
 
 
-async def get_user_info(id_tg):
+async def get_user_info(id_tg) -> dict:
     async with aiohttp.ClientSession() as session:
         params = {
             'tg_id': id_tg
