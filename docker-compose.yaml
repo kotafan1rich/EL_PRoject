@@ -38,7 +38,7 @@ services:
 
   db:
     container_name: "db"
-    image: postgres:16.0
+    image: postgres
     restart: always
     volumes:
       - .:/docker-entrypoint-initdb.d
