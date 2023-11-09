@@ -62,6 +62,8 @@ async def set_settings(message: types.Message, state: FSMContext):
             await state.set_state(FSMSettings.education_id)
         elif param == group_id_b.text:
             await state.set_state(FSMSettings.group_id)
+        elif param == change_jwt_b.text:
+            await state.set_state(FSMSettings.jwt_token)
         else:
             return await state.clear()
         await bot.send_message(message.from_user.id,
@@ -78,6 +80,13 @@ async def set_education_id(message: types.Message, state: FSMContext):
 
 async def set_group_id(message: types.Message, state: FSMContext):
     await state.update_data(group_id=int(message.text))
+    await state.set_state(FSMSettings.change_info)
+    await bot.send_message(message.from_user.id, f'Установленно, не забудьте сохранить',
+                           reply_markup=kb_client_set_params)
+
+
+async def set_jwt(message: types.Message, state: FSMContext):
+    await state.update_data(jwt=int(message.text))
     await state.set_state(FSMSettings.change_info)
     await bot.send_message(message.from_user.id, f'Установленно, не забудьте сохранить',
                            reply_markup=kb_client_set_params)
@@ -124,19 +133,19 @@ async def change_jwt(message: types.Message, state: FSMContext):
     await bot.send_message(message.from_user.id, CHANGE_JWT)
 
 
-async def get_jwt(message: types.Message, state: FSMContext):
-    jwt = message.text
-    id_tg = message.from_user.id
-
-    data = {
-        'jwt_token': jwt,
-    }
-    res = await save_user_info(id_tg=id_tg, user_info=data)
-    if res:
-        await bot.send_message(id_tg, ADDED, reply_markup=kb_client_main)
-    else:
-        await bot.send_message(id_tg, ERROR_MES)
-    await state.clear()
+# async def get_jwt(message: types.Message, state: FSMContext):
+#     jwt = message.text
+#     id_tg = message.from_user.id
+#
+#     data = {
+#         'jwt_token': jwt,
+#     }
+#     res = await save_user_info(id_tg=id_tg, user_info=data)
+#     if res:
+#         await bot.send_message(id_tg, ADDED, reply_markup=kb_client_main)
+#     else:
+#         await bot.send_message(id_tg, ERROR_MES)
+#     await state.clear()
 
 
 async def help(message: types.Message):
@@ -148,12 +157,13 @@ def register_handlers_client(dp: Dispatcher):
     dp.message.register(cancel_handler, F.text == cancel_b.text)
     dp.message.register(get_settings, F.text == settings_b.text)
     dp.message.register(change_info, F.text == change_info_b.text)
-    dp.message.register(set_settings, F.text.in_((education_id_b.text, group_id_b.text, save_b.text)))
+    dp.message.register(set_settings, F.text.in_((education_id_b.text, group_id_b.text, change_jwt_b.text, save_b.text)))
     dp.message.register(set_education_id, FSMSettings.education_id)
     dp.message.register(set_group_id, FSMSettings.group_id)
+    dp.message.register(set_jwt, FSMSettings.jwt_token)
     dp.message.register(get_marks_quater_handler, F.text.in_((quater_1_b.text, quater_2_b.text, quater_3_b.text, quater_4_b.text)))
     dp.message.register(get_marks_half_handler, F.text.in_((half_1_b.text, half_2_b.text)))
     dp.message.register(get_marks_year_handler, F.text == year_b.text)
     dp.message.register(change_jwt, F.text == change_jwt_b.text)
-    dp.message.register(get_jwt, FSMSettings.jwt_token)
+    # dp.message.register(get_jwt, FSMSettings.jwt_token)
     dp.message.register(help, F.text == help_b.text)
