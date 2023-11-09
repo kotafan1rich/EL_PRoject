@@ -7,7 +7,7 @@ from create_bot import bot
 from keyboards import kb_client_main, kb_client_settings, education_id_b, group_id_b, settings_b, \
     change_info_b, kb_client_set_params, save_b, cancel_b, quater_4_b, quater_3_b, \
     quater_2_b, quater_1_b, half_2_b, half_1_b, year_b, help_b, change_jwt_b
-from messages import HELP, SETTINGS, ERROR_MES, CHANGE_JWT, ADDED, CANCELED, CHANGE_SETTINGS
+from messages import HELP, SETTINGS, ERROR_MES, CHANGE_JWT, ADDED, CANCELED, CHANGE_SETTINGS, NOT_ADDED_SETTINGS
 
 from .other import user_exists, add_user, get_user_info, get_clean_user_info, save_user_info, get_marks_quater, \
     get_marks_half, get_marks_year
@@ -113,7 +113,7 @@ async def get_marks_quater_handler(message: types.Message):
         marks = await get_marks_quater(id_tg, quater)
         await bot.send_message(id_tg, marks, reply_markup=kb_client_main)
     else:
-        await bot.send_message(id_tg, 'MES_NOT_ADDED_SETTINGS', reply_markup=kb_client_main)
+        await bot.send_message(id_tg, NOT_ADDED_SETTINGS, reply_markup=kb_client_main)
 
 
 async def get_marks_half_handler(message: types.Message):
@@ -165,5 +165,4 @@ def register_handlers_client(dp: Dispatcher):
     dp.message.register(get_marks_half_handler, F.text.in_((half_1_b.text, half_2_b.text)))
     dp.message.register(get_marks_year_handler, F.text == year_b.text)
     dp.message.register(change_jwt, F.text == change_jwt_b.text)
-    # dp.message.register(get_jwt, FSMSettings.jwt_token)
     dp.message.register(help, F.text == help_b.text)
