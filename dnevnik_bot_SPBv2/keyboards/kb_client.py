@@ -26,12 +26,12 @@ kb_client_main_bottoms = [
 # kb_client_main_text_bottoms = [*ilist(map(lambda x: [i.text for i in x], kb_client_main_bottoms))]
 
 kb_client_settings_bottms = [
-    [change_info_b, change_jwt_b],
+    [change_info_b],
     [cancel_b]
 ]
 
 kb_client_set_params_bottms = [
-    [education_id_b, group_id_b],
+    [education_id_b, group_id_b, change_jwt_b],
     [save_b],
     [cancel_b]
 ]
