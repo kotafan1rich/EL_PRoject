@@ -50,7 +50,7 @@ async def get_user_info(id_tg) -> dict:
 def get_clean_user_info(user_info):
     group_id: str = f'group_id: {user_info.get("group_id")}'
     education_id: str = f'education_id: {user_info.get("education_id")}'
-    jwt_token: str = f'jwt_token: {'добавлен' if bool(user_info.get("jwt_token")) else "None"}'
+    jwt_token: str = f'jwt_token: {"добавлен" if bool(user_info.get("jwt_token")) else "None"}'
     res = '\n'.join((education_id, group_id, jwt_token))
     return res
 
