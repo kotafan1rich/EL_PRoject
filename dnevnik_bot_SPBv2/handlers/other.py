@@ -2,7 +2,7 @@ import datetime
 
 import aiohttp
 
-from config import API_HOST, API_PORT, API_URL
+from config import API_URL
 
 current_year = datetime.datetime.now().year
 next_year = current_year + 1
@@ -159,6 +159,6 @@ async def get_marks_year(id_tg: int):
             json = await response.json()
             marks = json.get('result')
             if marks:
-                return _sort_year(marks, f'Год') if response.status == 200 else 'Ошибка...'
-            return f'Нет оценок за год'
+                return _sort_year(marks, 'Год') if response.status == 200 else 'Ошибка...'
+            return 'Нет оценок за год'
 

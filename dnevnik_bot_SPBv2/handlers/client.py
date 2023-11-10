@@ -74,21 +74,21 @@ async def set_settings(message: types.Message, state: FSMContext):
 async def set_education_id(message: types.Message, state: FSMContext):
     await state.update_data(education_id=int(message.text))
     await state.set_state(FSMSettings.change_info)
-    await bot.send_message(message.from_user.id, f'Установленно, не забудьте сохранить',
+    await bot.send_message(message.from_user.id, 'Установленно, не забудьте сохранить',
                            reply_markup=kb_client_set_params)
 
 
 async def set_group_id(message: types.Message, state: FSMContext):
     await state.update_data(group_id=int(message.text))
     await state.set_state(FSMSettings.change_info)
-    await bot.send_message(message.from_user.id, f'Установленно, не забудьте сохранить',
+    await bot.send_message(message.from_user.id, 'Установленно, не забудьте сохранить',
                            reply_markup=kb_client_set_params)
 
 
 async def set_jwt(message: types.Message, state: FSMContext):
     await state.update_data(jwt_token=message.text)
     await state.set_state(FSMSettings.change_info)
-    await bot.send_message(message.from_user.id, f'Установленно, не забудьте сохранить',
+    await bot.send_message(message.from_user.id, 'Установленно, не забудьте сохранить',
                            reply_markup=kb_client_set_params)
 
 
