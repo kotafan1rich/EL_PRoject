@@ -32,4 +32,4 @@ indent-width = 4
 target-version = "py39"
 
 [format]
-quote-style = "double"
+quote-style = "singlr"
