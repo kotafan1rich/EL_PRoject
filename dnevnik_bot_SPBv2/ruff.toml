@@ -24,6 +24,7 @@ exclude = [
     "venv",
     "Dockerfile",
     "*.txt",
+    "__init__.py"
 ]
 
 line-length = 88
@@ -32,4 +33,4 @@ indent-width = 4
 target-version = "py39"
 
 [format]
-quote-style = "singlr"
+quote-style = "double"

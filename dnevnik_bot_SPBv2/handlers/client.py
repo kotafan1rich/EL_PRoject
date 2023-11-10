@@ -31,6 +31,7 @@ async def start(message: types.Message):
         await bot.send_message(user_id, HELP, reply_markup=kb_client_main, parse_mode=None)
 
 
+
 async def get_settings(message: types.Message, state: FSMContext):
     user_info = await get_user_info(message.from_user.id)
     clean_user_info: str = get_clean_user_info(user_info)
@@ -131,21 +132,6 @@ async def get_marks_year_handler(message: types.Message):
 async def change_jwt(message: types.Message, state: FSMContext):
     await state.set_state(FSMSettings.jwt_token)
     await bot.send_message(message.from_user.id, CHANGE_JWT)
-
-
-# async def get_jwt(message: types.Message, state: FSMContext):
-#     jwt = message.text
-#     id_tg = message.from_user.id
-#
-#     data = {
-#         'jwt_token': jwt,
-#     }
-#     res = await save_user_info(id_tg=id_tg, user_info=data)
-#     if res:
-#         await bot.send_message(id_tg, ADDED, reply_markup=kb_client_main)
-#     else:
-#         await bot.send_message(id_tg, ERROR_MES)
-#     await state.clear()
 
 
 async def help(message: types.Message):
