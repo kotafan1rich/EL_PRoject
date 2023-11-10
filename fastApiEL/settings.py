@@ -1,5 +1,5 @@
 from envparse import Env
-from config import *
+from config import POSTGRES_HOST, POSTGRES_NAME, POSTGRES_PASSWORD, POSTGRES_PORT, POSTGRES_USER
 
 env = Env()
 
