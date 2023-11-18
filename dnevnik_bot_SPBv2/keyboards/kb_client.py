@@ -14,7 +14,7 @@ change_info_b = KeyboardButton(text='Изменить информацию')
 education_id_b = KeyboardButton(text='education_id')
 group_id_b = KeyboardButton(text='group_id')
 save_b = KeyboardButton(text='Сохранить')
-change_jwt_b = KeyboardButton(text='Изменить jwt')
+change_jwt_b = KeyboardButton(text='jwt')
 
 kb_client_main_bottoms = [
     [quater_1_b, quater_2_b, quater_3_b, quater_4_b],

@@ -115,7 +115,7 @@ class Mark:
             'p_date_from': date_from,
             'p_date_to': date_to,
             'p_limit': '100',
-            'p_estimate_types[]': [str(i) for i in range(1, 32) if i != 15],
+            'p_estimate_types[]': [str(i) for i in range(1, 32) if i != 15] + ['37'],
         }
 
         cookies = {
