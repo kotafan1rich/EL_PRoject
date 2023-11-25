@@ -47,6 +47,11 @@ class Mark:
             'sec-ch-ua-mobile': '?0',
         }
 
+    @staticmethod
+    def get_target_grade(marks: list[int]):
+        return f'{int((4.5 * len(marks) - sum(marks)) / 0.5)}+'
+
+
     @classmethod
     def chek_esimate_type_name(cls, estimate_type_name: str):
         """Валидность категории записи из эл. дневника
@@ -115,7 +120,7 @@ class Mark:
             'p_date_from': date_from,
             'p_date_to': date_to,
             'p_limit': '100',
-            'p_estimate_types[]': [str(i) for i in range(1, 32) if i != 15] + ['37'],
+            'p_estimate_types[]': (str(i) for i in range(1, 32) if i != 15), # 35
         }
 
         cookies = {
@@ -154,6 +159,7 @@ class Mark:
                 'last_three': [],
                 'count_marks': [],
                 'average': [],
+                'target_grade': None,
                 'final_q': [],
                 'final_years': [],
                 'final': [],
@@ -169,6 +175,8 @@ class Mark:
 
                 last_three: list = sub_info['q_marks'][-3::]
                 sub_info['last_three'] = last_three
+
+                sub_info['target_grade'] = self.get_target_grade(sub_info['q_marks'])
 
                 sub_info['final_q'].reverse()
 

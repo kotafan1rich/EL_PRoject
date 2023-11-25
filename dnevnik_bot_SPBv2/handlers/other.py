@@ -71,6 +71,7 @@ def _abbreviation(marks_res: str):
         .replace('История России. Всеобщая история', 'История')
         .replace('Иностранный язык (английский язык)', 'Английский язык')
         .replace('Алгебра и начала математического анализа', 'Алгебра')
+        .replace('Вероятность и статистика', 'Вер. и статистика'),
     )
 
 
@@ -81,11 +82,12 @@ def _sort_quater(data, sort_result, name_period):
         if subject != 'finals_average_q':
             average = subject_data['average'][0]
             count = subject_data['count_marks'][0]
+            target_grade = '' if not subject_data['target_grade'] else subject_data['target_grade']
             final_m = ''
             if subject_data['final_q']:
                 final_m = '=> ' + str(subject_data['final_q'][0])
             last_3 = ' '.join(list(map(str, subject_data['last_three'])))
-            result += f'<i>{subject}</i>  {last_3}  ({count})  <i>{average}</i> {final_m}\n'
+            result += f'<i>{subject}</i>  {last_3}  ({count})  <i>{average}</i> {final_m} {target_grade}\n'
     if finals_average:
         result += f'\nСр. балл аттестации - {finals_average}'
     return _abbreviation(result)
