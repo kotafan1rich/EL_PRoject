@@ -176,15 +176,16 @@ class Mark:
                 last_three: list = sub_info['q_marks'][-3::]
                 sub_info['last_three'] = last_three
 
-                sub_info['target_grade'] = str(self.get_target_grade(sub_info['q_marks'])) if sub_info['average'][0] < 4.5 else None
-
                 sub_info['final_q'].reverse()
 
                 count_marks = len(sub_info['q_marks'])
                 sub_info['count_marks'].append(count_marks)
 
                 sum_marks = sum(sub_info['q_marks'])
-                sub_info['average'].append(round(sum_marks / count_marks, 2))
+                average = round(sum_marks / count_marks, 2)
+                sub_info['average'].append(average)
+
+                sub_info['target_grade'] = str(self.get_target_grade(sub_info['q_marks'])) if average < 4.5 else None
 
                 del sub_info['q_marks']
             except ZeroDivisionError:
