@@ -110,7 +110,7 @@ def _sort_year(sort_result, name_period):
     return _abbreviation(result)
 
 
-async def get_marks_quater(id_tg: int, quater: int) -> str:
+async def get_marks_quater(id_tg: int, quater: int):
     date_from, date_to = dates[quater]
     async with aiohttp.ClientSession() as session:
         params = {
