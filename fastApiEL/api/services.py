@@ -12,19 +12,12 @@ class Mark:
     Returns:
         dict: <прредмет>: <даннные по предмету>
     """
-    # QUATER_CODES = {
-    #     '1': 1,
-    #     '2': 2,
-    #     '3': 3,
-    #     '4': 4,
-    #     '5': 20
-    # }
 
-    __bad_estimate_value_name = ['замечание', 'неизвестная', 'по болезни', 'зачёт']
-    __bad_estimate_type_name = ['годовая', 'итоговая', 'четверть', 'посещаемость']
-    finals_estimate_type_name = ['годовая', 'итоговая', 'четверть']
-    __good_value_of_estimate_type_name = ['работа', 'задание', 'диктант', 'тест', 'чтение', 'сочинение', 'изложение',
-                                          'опрос', 'зачёт']
+    # __bad_estimate_value_name = ['замечание', 'неизвестная', 'по болезни', 'зачёт']
+    # __bad_estimate_type_name = ['годовая', 'итоговая', 'четверть', 'посещаемость']
+    # finals_estimate_type_name = ['годовая', 'итоговая', 'четверть']
+    # __good_value_of_estimate_type_name = ['работа', 'задание', 'диктант', 'тест', 'чтение', 'сочинение', 'изложение',
+    #                                       'опрос', 'зачёт']
 
     def __init__(self):
         with open('api/useragents/user_agent.txt', encoding='UTF-8') as f:
@@ -48,26 +41,28 @@ class Mark:
         }
 
     @staticmethod
-    def get_target_grade(marks: list[int]):
-        return f'{int((4.5 * len(marks) - sum(marks)) / 0.5)}+'
+    def get_target_grade(marks: list[int], average: float):
+        if average < 4.5:
+            return f'{int((4.5 * len(marks) - sum(marks)) / 0.5)}+'
 
 
-    @classmethod
-    def chek_esimate_type_name(cls, estimate_type_name: str):
-        """Валидность категории записи из эл. дневника
+    # @classmethod
+    # def chek_esimate_type_name(cls, estimate_type_name: str):
+    #     """Валидность категории записи из эл. дневника
+    #
+    #     Args:
+    #         estimate_type_name (str): категория записи
+    #
+    #     Returns:
+    #         bool: True or False
+    #     """
+    #     return any(
+    #         good_value in estimate_type_name.lower()
+    #         for good_value in cls.__good_value_of_estimate_type_name
+    #     )
 
-        Args:
-            estimate_type_name (str): категория записи
-
-        Returns:
-            bool: True or False
-        """
-        return any(
-            good_value in estimate_type_name.lower()
-            for good_value in cls.__good_value_of_estimate_type_name
-        )
-
-    def get_marks_dict(self, response: list, marks: dict):
+    @staticmethod
+    def get_marks_dict(response: list, marks: dict):
         """Получение словаря оценок
 
         Args:
@@ -83,21 +78,21 @@ class Mark:
             subject_name = subject_data['subject_name']
             estimate_value_name = subject_data['estimate_value_name']
 
-            if (str(estimate_value_name).lower() not in self.__bad_estimate_value_name) and (
-                    estimate_value_name.lower() not in self.__bad_estimate_type_name) and (
-                    self.chek_esimate_type_name(subject_data['estimate_type_name'])):
-                marks[subject_name]['q_marks'].append(int(estimate_value_name))
+            # if (str(estimate_value_name).lower() not in self.__bad_estimate_value_name) and (
+            #         estimate_value_name.lower() not in self.__bad_estimate_type_name) and (
+            #         self.chek_esimate_type_name(subject_data['estimate_type_name'])):
+            marks[subject_name]['q_marks'].append(int(estimate_value_name))
 
-            else:
-                for estimate_type_name_split in subject_data['estimate_type_name'].split():
-                    if estimate_type_name_split in ['четверть', ]:
-                        marks[subject_name]['final_q'].append(int(estimate_value_name))
-                    elif estimate_type_name_split in ['Годовая']:
-                        marks[subject_name]['final_years'].append(int(estimate_value_name))
-                    elif estimate_type_name_split in ['Итоговая']:
-                        marks[subject_name]['final'].append(int(estimate_value_name))
-                    elif estimate_type_name_split in ['Экзамен']:
-                        marks[subject_name]['exam'].append(int(estimate_value_name))
+            # else:
+            for estimate_type_name_split in subject_data['estimate_type_name'].split():
+                if estimate_type_name_split in ['четверть', ]:
+                    marks[subject_name]['final_q'].append(int(estimate_value_name))
+                elif estimate_type_name_split in ['Годовая']:
+                    marks[subject_name]['final_years'].append(int(estimate_value_name))
+                elif estimate_type_name_split in ['Итоговая']:
+                    marks[subject_name]['final'].append(int(estimate_value_name))
+                elif estimate_type_name_split in ['Экзамен']:
+                    marks[subject_name]['exam'].append(int(estimate_value_name))
 
         return marks
 
@@ -120,7 +115,7 @@ class Mark:
             'p_date_from': date_from,
             'p_date_to': date_to,
             'p_limit': '100',
-            'p_estimate_types[]': (str(i) for i in range(1, 32) if i != 15), # 35
+            'p_estimate_types[]': (str(i) for i in [*range(1, 32), 35] if i != 15),
         }
 
         cookies = {
@@ -185,7 +180,7 @@ class Mark:
                 average = round(sum_marks / count_marks, 2)
                 sub_info['average'].append(average)
 
-                sub_info['target_grade'] = str(self.get_target_grade(sub_info['q_marks'])) if average < 4.5 else None
+                sub_info['target_grade'] = self.get_target_grade(sub_info['q_marks'], average)
 
                 del sub_info['q_marks']
             except ZeroDivisionError:
@@ -208,11 +203,13 @@ class Mark:
 
         return res
 
-    def _sort_finals_quater(self, data):
+    @staticmethod
+    def _sort_finals_quater(data):
         all_finals = [marks_info['final_q'][0] for marks_info in data.values() if bool(marks_info['final_q'])]
         return {'finals_average_q': round(sum(all_finals) / len(all_finals), 2) if all_finals else None}
 
-    def _sort_finals_year(self, sort_result):
+    @staticmethod
+    def _sort_finals_year(sort_result):
         all_finals_q = [i['final_years'][0] for i in sort_result.values() if i['final_years']]
         all_finals_y = [i['final'][0] for i in sort_result.values() if i['final']]
 
