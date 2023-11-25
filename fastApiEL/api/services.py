@@ -176,7 +176,7 @@ class Mark:
                 last_three: list = sub_info['q_marks'][-3::]
                 sub_info['last_three'] = last_three
 
-                sub_info['target_grade'] = str(self.get_target_grade(sub_info['q_marks']))
+                sub_info['target_grade'] = str(self.get_target_grade(sub_info['q_marks'])) if sub_info['average'][0] < 4.5 else None
 
                 sub_info['final_q'].reverse()
 
