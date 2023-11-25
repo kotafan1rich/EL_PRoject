@@ -63,16 +63,14 @@ async def save_user_info(id_tg: int, user_info: dict):
 
 
 def _abbreviation(marks_res: str):
-    return (
-        marks_res.replace('Основы безопасности жизнедеятельности', 'ОБЖ')
-        .replace('Изобразительное искусство', 'ИЗО')
-        .replace('Физическая культура', 'Физ-ра')
-        .replace('Иностранный язык (английский)', 'Английский язык')
-        .replace('История России. Всеобщая история', 'История')
-        .replace('Иностранный язык (английский язык)', 'Английский язык')
-        .replace('Алгебра и начала математического анализа', 'Алгебра')
-        .replace('Вероятность и статистика', 'Вер. и статистика'),
-    )
+    return marks_res.replace('Основы безопасности жизнедеятельности', 'ОБЖ')\
+        .replace('Изобразительное искусство', 'ИЗО')\
+        .replace('Физическая культура', 'Физ-ра')\
+        .replace('Иностранный язык (английский)', 'Английский язык')\
+        .replace('История России. Всеобщая история', 'История')\
+        .replace('Иностранный язык (английский язык)', 'Английский язык')\
+        .replace('Алгебра и начала математического анализа', 'Алгебра')\
+        .replace('Вероятность и статистика', 'Вер. и статистика')
 
 
 def _sort_quater(data, sort_result, name_period):
@@ -87,7 +85,7 @@ def _sort_quater(data, sort_result, name_period):
             if subject_data['final_q']:
                 final_m = '=> ' + str(subject_data['final_q'][0])
             last_3 = ' '.join(list(map(str, subject_data['last_three'])))
-            result += f'<i>{subject}</i>  {last_3}  ({count})  <i>{average}</i> {final_m}\n'
+            result += f'<i>{subject}</i>  {last_3}  ({count})  <i>{average}</i> {final_m} {target_grade}\n'
     if finals_average:
         result += f'\nСр. балл аттестации - {finals_average}'
     return _abbreviation(result)
