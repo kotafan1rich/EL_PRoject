@@ -87,7 +87,7 @@ def _sort_quater(data, sort_result, name_period):
             if subject_data['final_q']:
                 final_m = '=> ' + str(subject_data['final_q'][0])
             last_3 = ' '.join(list(map(str, subject_data['last_three'])))
-            result += f'<i>{subject}</i>  {last_3}  ({count})  <i>{average}</i> {final_m} {target_grade}\n'
+            result += f'<i>{subject}</i>  {last_3}  ({count})  <i>{average}</i> {final_m}\n'
     if finals_average:
         result += f'\nСр. балл аттестации - {finals_average}'
     return _abbreviation(result)
@@ -110,7 +110,7 @@ def _sort_year(sort_result, name_period):
     return _abbreviation(result)
 
 
-async def get_marks_quater(id_tg: int, quater: int):
+async def get_marks_quater(id_tg: int, quater: int) -> str:
     date_from, date_to = dates[quater]
     async with aiohttp.ClientSession() as session:
         params = {

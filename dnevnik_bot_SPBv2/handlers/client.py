@@ -111,7 +111,7 @@ async def get_marks_quater_handler(message: types.Message):
     quater = int(text.split()[0])
     user_info = await get_user_info(id_tg)
     if all(user_info.values()):
-        marks = await get_marks_quater(id_tg, quater)
+        marks: str = await get_marks_quater(id_tg, quater)
         await bot.send_message(id_tg, marks, reply_markup=kb_client_main)
     else:
         await bot.send_message(id_tg, NOT_ADDED_SETTINGS, reply_markup=kb_client_main)
