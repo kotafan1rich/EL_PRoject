@@ -182,7 +182,7 @@ class Mark:
 
                 sub_info['target_grade'] = self.get_target_grade(sub_info['q_marks'], average)
 
-                del sub_info['q_marks']
+                # del sub_info['q_marks']
             except ZeroDivisionError:
                 del marks[sub]
         return marks
