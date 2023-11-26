@@ -137,8 +137,8 @@ class Mark:
         sort_response = sorted(response, key=lambda x: datetime.datetime.strptime(x['date'], '%d.%m.%Y'))
 
         params_list_subjects = {
-            # 'p_limit': '100'
-            # 'p_page': '1',
+            'p_limit': '1000',
+            'p_page': '1',
             'p_educations[]': education_id,
             'p_groups[]': group_id,
 
