@@ -13,12 +13,6 @@ class Mark:
         dict: <прредмет>: <даннные по предмету>
     """
 
-    # __bad_estimate_value_name = ['замечание', 'неизвестная', 'по болезни', 'зачёт']
-    # __bad_estimate_type_name = ['годовая', 'итоговая', 'четверть', 'посещаемость']
-    # finals_estimate_type_name = ['годовая', 'итоговая', 'четверть']
-    # __good_value_of_estimate_type_name = ['работа', 'задание', 'диктант', 'тест', 'чтение', 'сочинение', 'изложение',
-    #                                       'опрос', 'зачёт']
-
     def __init__(self):
         with open('api/useragents/user_agent.txt', encoding='UTF-8') as f:
             user_agents = f.readlines()
@@ -46,21 +40,6 @@ class Mark:
             return f'{int((4.5 * len(marks) - sum(marks)) / 0.5)}+'
 
 
-    # @classmethod
-    # def chek_esimate_type_name(cls, estimate_type_name: str):
-    #     """Валидность категории записи из эл. дневника
-    #
-    #     Args:
-    #         estimate_type_name (str): категория записи
-    #
-    #     Returns:
-    #         bool: True or False
-    #     """
-    #     return any(
-    #         good_value in estimate_type_name.lower()
-    #         for good_value in cls.__good_value_of_estimate_type_name
-    #     )
-
     @staticmethod
     def get_marks_dict(response: list, marks: dict):
         """Получение словаря оценок
@@ -78,12 +57,8 @@ class Mark:
             subject_name = subject_data['subject_name']
             estimate_value_name = subject_data['estimate_value_name']
 
-            # if (str(estimate_value_name).lower() not in self.__bad_estimate_value_name) and (
-            #         estimate_value_name.lower() not in self.__bad_estimate_type_name) and (
-            #         self.chek_esimate_type_name(subject_data['estimate_type_name'])):
             marks[subject_name]['q_marks'].append(int(estimate_value_name))
 
-            # else:
             for estimate_type_name_split in subject_data['estimate_type_name'].split():
                 if estimate_type_name_split in ['четверть', ]:
                     marks[subject_name]['final_q'].append(int(estimate_value_name))
@@ -182,7 +157,7 @@ class Mark:
 
                 sub_info['target_grade'] = self.get_target_grade(sub_info['q_marks'], average)
 
-                # del sub_info['q_marks']
+                del sub_info['q_marks']
             except ZeroDivisionError:
                 del marks[sub]
         return marks
