@@ -4,8 +4,7 @@ services:
     container_name: bot
     build: ./dnevnik_bot_SPBv2
     restart: always
-    networks:
-      - api_bot
+
     environment:
       - TOKEN=5439011304:AAGF_03sJSmc8GR7gkUhjG_3SEvadUPz3oI
       - TEST_TOKEN=5824617627:AAHaZCgjnIFuQIWk8h49yyvlsnlI7K9Ia4g
@@ -19,8 +18,7 @@ services:
     container_name: api
     build: ./fastApiEL
     restart: always
-    networks:
-      - api_bot
+
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
@@ -42,8 +40,7 @@ services:
     restart: always
     volumes:
       - .:/docker-entrypoint-initdb.d
-    networks:
-      - api_bot
+
     environment:
       - POSTGRES_HOST_AUTH_METHOD=md5
       - PGDATA=/var/lib/postgresql/data/pgdata

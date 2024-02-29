@@ -19,7 +19,7 @@ down:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down
 
 logs:
-	docker-compose -f $(DOCKER_COMPOSE_FILE) logs
+	docker-compose -f $(DOCKER_COMPOSE_FILE) logs -f
 
 clean:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) down --volumes --rmi all

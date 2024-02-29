@@ -32,3 +32,12 @@ class ShowUser(TunedModel):
 
 class MarksResult(TunedModel):
     result: dict
+
+
+class UserPeriodsResponse(TunedModel):
+    result: dict
+
+
+class UserPeriodRequest(TunedModel):
+    id_tg: int
+    group_id: int
