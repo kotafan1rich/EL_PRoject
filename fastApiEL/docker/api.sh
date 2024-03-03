@@ -3,7 +3,7 @@
 
 # Ожидание запуска базы данных
 echo "Waiting for database to be ready..."
-while ! echo -e "\x1dclose\x0d" | telnet db 5432; do
+while ! nc -zv db 5432 &>/dev/null; do
   sleep 1
 done
 
