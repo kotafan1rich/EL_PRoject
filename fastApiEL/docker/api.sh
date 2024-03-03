@@ -3,7 +3,7 @@
 
 # Ожидание запуска базы данных
 echo "Waiting for database to be ready..."
-while ! ncat -z db 5432; do
+while ! echo -e "\x1dclose\x0d" | telnet db 5432; do
   sleep 1
 done
 
