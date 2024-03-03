@@ -8,7 +8,6 @@ from config import TOKEN
 
 load_dotenv()
 
-
 storage = MemoryStorage()
 
 bot = Bot(token=TOKEN, parse_mode='HTML')

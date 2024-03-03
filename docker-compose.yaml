@@ -39,7 +39,7 @@ services:
     image: postgres
     restart: always
     volumes:
-      - .:/docker-entrypoint-initdb.d
+      - ./data:/var/lib/postgresql/data
 
     environment:
       - POSTGRES_HOST_AUTH_METHOD=md5
