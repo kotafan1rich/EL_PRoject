@@ -1,9 +1,10 @@
 #!/bin/bash
 
+RUN apt-get update && apt-get install -y netcat
 
-# Ожидание запуска базы данных
+
 echo "Waiting for database to be ready..."
-while ! nc -zv db 5432 &>/dev/null; do
+while ! nc -z db 5432; do
   sleep 1
 done
 
