@@ -9,8 +9,6 @@ https://dnevnik2.petersburgedu.ru/api/journal/person/related-child-list
 {"data":{"items":[{"educations":[{"push_subscribe":true, "education_id": ВАШ ID, ...}
 
 Намите Настройки -> Изменить информацию -> education_id -> ВАШ ID -> Сохранить
-
-Если нужна помощь пишите @Gohdot 
 '''
 
 SETTINGS = 'Ты можешь изменить:'

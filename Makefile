@@ -28,7 +28,7 @@ migrate:
 	docker exec -it api alembic upgrade head
 
 makemigrations:
-	sudo /fastApiEL/alembic revision --autogenerate -m "chande auto"
+	/fastApiEL/alembic revision --autogenerate -m "chande auto"
 
 
 rebuild: down build up
