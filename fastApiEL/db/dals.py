@@ -34,18 +34,9 @@ class UserDAL:
             return user_row[0]
 
     async def update_user_by_tg_id(self, id_tg: int, **kwargs) -> Union[User, None]:
-        query = update(User).where(User.id_tg==id_tg).values(kwargs).\
+        query = update(User).where(User.id_tg == id_tg).values(kwargs).\
             returning(User.id_tg)
         res = await self.db_session.execute(query)
         updated_user_id_row = res.fetchone()
         if res is not None:
             return updated_user_id_row[0]
-
-
-# class MarkDAL:
-#     def __init__(self, db_session: AsyncSession):
-#         self.db_session = db_session
-#
-#
-#     def
-

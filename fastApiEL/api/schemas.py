@@ -15,7 +15,6 @@ class UpdateUserResponse(BaseModel):
 
 class UpdateUserRequest(BaseModel):
     user_id: Union[None, int] = None
-    # group_name: Union[None, int] = None
     education_id: Union[None, int] = None
     group_id: Union[None, int] = None
     jwt_token: Union[None, str] = None
@@ -24,7 +23,6 @@ class UpdateUserRequest(BaseModel):
 class ShowUser(TunedModel):
     id: uuid.UUID
     id_tg: int
-    # group_name: Union[None, int]
     education_id: Union[None, int]
     group_id: Union[None, int]
     jwt_token: Union[None, str]

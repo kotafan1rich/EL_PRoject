@@ -31,7 +31,6 @@ async def start(message: types.Message):
         await bot.send_message(id_tg, HELP, reply_markup=await get_kb_client_main(id_tg), parse_mode=None)
 
 
-
 async def get_settings(message: types.Message, state: FSMContext):
     user_info = await get_user_info(message.from_user.id)
     clean_user_info: str = get_clean_user_info(user_info)
