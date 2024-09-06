@@ -12,6 +12,7 @@ client.register_handlers_client(dp)
 
 
 async def main():
+    await bot.delete_webhook()
     await dp.start_polling(bot)
 
 

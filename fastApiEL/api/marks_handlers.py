@@ -1,12 +1,15 @@
 from typing import Union
 
 from fastapi import APIRouter, Depends
+
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from api.schemas import MarksResult, UserPeriodsResponse, UserPeriodRequest
 from api.services import Mark
 from db.dals import UserDAL
 from db.session import get_db
+
+from fastapi.exceptions import HTTPException
 
 
 marks_router = APIRouter()
@@ -17,7 +20,7 @@ def __get_marks_by_period(date_from: str, date_to: str, education_id: int, group
         mark = Mark(jwt_token=jwt_token)
         data = mark.get_marks(date_from=date_from, date_to=date_to, education_id=education_id, group_id=group_id, period_id=period_id)
         return data
-    return {}
+    raise HTTPException(status_code=404, detail="No data")
 
 
 async def _get_marks_by_period(id_tg: int, date_from: str, date_to: str, period_id: int, db) -> MarksResult:

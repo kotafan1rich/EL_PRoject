@@ -4,12 +4,8 @@ services:
     build: ./dnevnik_bot_SPBv2
     restart: always
 
-    environment:
-      - TOKEN=5439011304:AAGF_03sJSmc8GR7gkUhjG_3SEvadUPz3oI
-      - TEST_TOKEN=5824617627:AAHaZCgjnIFuQIWk8h49yyvlsnlI7K9Ia4g
-      - API_HOST=http://api
-      - API_PORT=8000
-      - DEBUG=False
+    env_file:
+      - ./dnevnik_bot_SPBv2/.env
     depends_on:
       - db
 
@@ -32,7 +28,7 @@ services:
       - "8000:8000"
 
   db:
-    container_name: "db"
+    container_name: db
     image: postgres
     volumes:
       - "db:/var/lib/postgresql/data"

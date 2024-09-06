@@ -19,7 +19,6 @@ async def _create_user(id_tg: int, db) -> ShowUser:
             return ShowUser(
                 id=user.id,
                 id_tg=user.id_tg,
-                # group_name=user.group_name,
                 education_id=user.education_id,
                 group_id=user.group_id,
                 jwt_token=user.jwt_token,
