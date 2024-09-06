@@ -1,14 +1,4 @@
 services:
-  bot:
-    container_name: bot
-    build: ./dnevnik_bot_SPBv2
-    restart: always
-
-    env_file:
-      - ./dnevnik_bot_SPBv2/.env
-    depends_on:
-      - db
-
   api:
     container_name: api
     build: ./fastApiEL
@@ -23,7 +13,6 @@ services:
       - 8000
     depends_on:
       - db
-      - bot
     ports:
       - "8000:8000"
 
@@ -46,6 +35,3 @@ services:
 
 volumes:
   db:
-
-networks:
-  api_bot:

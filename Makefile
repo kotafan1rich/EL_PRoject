@@ -1,11 +1,8 @@
-BOT_IMAGE_NAME = my_bot
 API_IMAGE_NAME = my_api
 
-BOT_PORT = 8000
 API_PORT = 8000
 POSTGRES_PORT = 5432
 
-BOT_DIR = ./dnevnik_bot_SPBv2
 API_DIR = ./fastApiEL
 DOCKER_COMPOSE_FILE = ./docker-compose.yaml
 
