@@ -38,7 +38,8 @@ class MarksCRUD:
 					raise HTTPException(status_code=404, detail="No data")
 				return MarksResult.model_validate(result=marks)
 
-	async def get_user_periods(self, id_tg: int, db) -> UserPeriodRequest:
+	@staticmethod
+	async def get_user_periods(id_tg: int, db) -> UserPeriodRequest:
 		async with db as session:
 			async with session.begin():
 				user_dal = UserDAL(db_session=session)

@@ -14,7 +14,7 @@ class Mark:
     """
 
 	def __init__(self, jwt_token: str):
-		with open("api/useragents/user_agent.txt", encoding="UTF-8") as f:
+		with open("src/api/useragents/user_agent.txt", encoding="UTF-8") as f:
 			user_agents = f.readlines()
 		self.user_agent = random.choice(user_agents).strip()
 		self.headers = {
