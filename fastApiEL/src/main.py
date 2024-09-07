@@ -1,7 +1,7 @@
 from fastapi.routing import APIRouter
 
-from api.user_handlers import user_router
-from api.marks_handlers import marks_router
+from src.api.user_handlers import user_router
+from src.api.marks_handlers import marks_router
 
 from fastapi import FastAPI
 

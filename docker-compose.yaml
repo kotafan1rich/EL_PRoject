@@ -7,7 +7,7 @@ services:
       - ./fastApiEL:/app
 
     env_file:
-      - ./fastApiEL/.env
+      - .env
     command: ["/fastapi_app/docker/api.sh"]
     expose:
       - 8000

@@ -9,11 +9,11 @@ class TunedModel(BaseModel):
         from_attributes = True
 
 
-class UpdateUserResponse(BaseModel):
+class UpdateUserResponse(TunedModel):
     updated_id_tg: int
 
 
-class UpdateUserRequest(BaseModel):
+class UpdateUserRequest(TunedModel):
     user_id: Union[None, int] = None
     education_id: Union[None, int] = None
     group_id: Union[None, int] = None
