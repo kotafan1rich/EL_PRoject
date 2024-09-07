@@ -20,15 +20,13 @@ services:
     container_name: db
     image: postgres
     volumes:
-      - "db:/var/lib/postgresql/data"
+      - "db:/var/lib/pgsql/data"
       - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
 
     environment:
       - POSTGRES_HOST_AUTH_METHOD=md5
-      - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+      - PGDATA=/var/lib/pgsql/data/pgdata
+
     expose:
       - 5432
     ports:
