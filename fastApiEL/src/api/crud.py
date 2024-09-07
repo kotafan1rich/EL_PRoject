@@ -35,8 +35,8 @@ class MarksCRUD:
 						group_id=group_id,
 						period_id=period_id,
 					)
-					raise HTTPException(status_code=404, detail="No data")
-				return MarksResult.model_validate(result=marks)
+					return MarksResult(result=marks)
+				raise HTTPException(status_code=404, detail="No data")
 
 	@staticmethod
 	async def get_user_periods(id_tg: int, db) -> UserPeriodRequest:
