@@ -21,11 +21,12 @@ services:
     image: postgres
     volumes:
       - "db:/var/lib/pgsql/data"
-      - ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
 
     environment:
       - POSTGRES_HOST_AUTH_METHOD=md5
-      - PGDATA=/var/lib/pgsql/data/pgdata
+      - PGDATA=/var/lib/postgresql/data
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
 
     expose:
       - 5432

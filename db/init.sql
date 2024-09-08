@@ -1,5 +1,5 @@
 -- Создаем пользователя для миграций
-CREATE USER postgres WITH PASSWORD 'postgres';
+-- CREATE USER maigrator WITH PASSWORD 'postgres';
 
 -- Назначаем права для подключения к базе данных
 GRANT CONNECT ON DATABASE postgres TO postgres;
