@@ -18,9 +18,9 @@ services:
 
   db:
     container_name: db
-    image: postgres
+    image: postgres:17
     volumes:
-      - "db:/var/lib/pgsql/data"
+      - ./db_data:/var/lib/pgsql/data
 
     environment:
       - POSTGRES_HOST_AUTH_METHOD=md5
@@ -28,7 +28,7 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     
-    command: /bin/bash -c "apt-get update && apt-get install -y cron && cron && docker-entrypoint.sh postgres"
+    # command: /bin/bash -c "apt-get update && apt-get install -y cron procps pkill ps && cron && docker-entrypoint.sh postgres"
 
     expose:
       - 5432
@@ -36,4 +36,4 @@ services:
       - "5432:5432"
 
 volumes:
-  db:
+  db_data:
