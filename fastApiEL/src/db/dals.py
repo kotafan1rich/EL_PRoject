@@ -13,7 +13,7 @@ class UserDAL:
 
     async def create_user(self, id_tg: int) -> User:
         new_user = User(
-            id_tg=id_tg
+            id_tg=int(id_tg)
         )
         self.db_session.add(new_user)
         await self.db_session.flush()
