@@ -15,3 +15,4 @@ class User(Base):
     education_id = Column(BIGINT, nullable=True)
     group_id = Column(BIGINT, nullable=True)
     jwt_token = Column(VARCHAR, nullable=True)
+    
