@@ -20,11 +20,11 @@ services:
     container_name: db
     image: postgres:17
     volumes:
-      - ./db_data:/var/lib/postgresql/data
+      - ./db_data:/var/lib/pgsql/data
 
     environment:
       - POSTGRES_HOST_AUTH_METHOD=md5
-      - PGDATA=/var/lib/postgresql/data
+      - PGDATA=/var/lib/pgsql/data
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
     
