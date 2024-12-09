@@ -24,17 +24,15 @@ services:
     container_name: db
     image: postgres:17
     volumes:
+      - ./postgresql.conf:/usr/share/postgresql/postgresql.conf
       - db_data:/var/lib/postgresql/data
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
-      - POSTGRES_HOST_AUTH_METHOD=md5
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_INITDB_ARGS=--shared-buffers=64MB
-      - POSTGRES_INITDB_ARGS=--work_mem=4MB
-      - POSTGRES_INITDB_ARGS=--maintenance_work_mem=16MB
+      - POSTGRES_USER=kot
+      - POSTGRES_PASSWORD=2007Fj2007
+    command: postgres -c config_file=/usr/share/postgresql/postgresql.conf
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
+      test: ["CMD-SHELL", "pg_isready -U kot -d postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -43,11 +41,6 @@ services:
       - 5432
     ports:
       - "5432:5432"
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '1'
-    #       memory: 4G
 
 volumes:
   db_data:
