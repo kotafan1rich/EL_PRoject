@@ -27,6 +27,7 @@ archive.zip
 .*.sw?
 .cache
 
+ruff.toml
 .DS_Store
 /fastApiEL/%PycharmProjects%EL_PRoject%fastApiEL/
 db_data/
