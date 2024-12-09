@@ -2,7 +2,7 @@ import asyncio
 import asyncpg
 import sys
 
-from fastApiEL.src.config import (
+from config import (
 	POSTGRES_PASSWORD,
 	POSTGRES_NAME,
 	POSTGRES_USER,
