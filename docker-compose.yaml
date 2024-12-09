@@ -30,7 +30,6 @@ services:
       - POSTGRES_HOST_AUTH_METHOD=md5
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-      - PGOPTIONS=-c shared_buffers=64MB -c work_mem=4MB -c maintenance_work_mem=16MB
       - POSTGRES_INITDB_ARGS=--shared-buffers=64MB
       - POSTGRES_INITDB_ARGS=--work_mem=4MB
       - POSTGRES_INITDB_ARGS=--maintenance_work_mem=16MB
@@ -44,6 +43,11 @@ services:
       - 5432
     ports:
       - "5432:5432"
+    # deploy:
+    #   resources:
+    #     limits:
+    #       cpus: '1'
+    #       memory: 4G
 
 volumes:
   db_data:
