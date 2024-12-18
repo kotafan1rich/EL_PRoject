@@ -28,7 +28,7 @@ services:
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_PASSWORD=2007Fj2007
       - POSTGRES_HOST_AUTH_METHOD=md5
       - POSTGRES_DB=postgres
     command: >
