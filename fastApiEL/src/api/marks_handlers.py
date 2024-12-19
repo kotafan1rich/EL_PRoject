@@ -16,7 +16,7 @@ async def get_marks_by_period(
 	date_to: str,
 	period_id: int,
 	db: AsyncSession = Depends(get_db),
-):
+):  
 	return await MarksCRUD.get_marks_by_period(id_tg, date_from, date_to, period_id, db)
 
 

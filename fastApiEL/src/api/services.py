@@ -1,7 +1,7 @@
 import datetime
 import random
 
-import requests
+from aiohttp import ClientSession
 
 
 class Mark:
@@ -36,20 +36,18 @@ class Mark:
 	current_year = datetime.datetime.now().year
 	next_year = current_year + 1
 
-	def __init__(self, jwt_token: str):
+	def __init__(self, jwt_token: str, session: ClientSession):
 		"""
-		Инициализирует объект, устанавливая заголовки и куки для HTTP-запросов.
-		Этот метод загружает случайный пользовательский агент из файла и настраивает необходимые заголовки и куки для взаимодействия с API.
+		Инициализирует сервис с аутентификацией и конфигурацией запросов.
+
+		Настраивает сеанс с предопределенными заголовками, куками и случайно выбранным user agent для выполнения веб-запросов к образовательной платформе.
 
 		Args:
-		        jwt_token (str): JSON Web Token, используемый для аутентификации при выполнении запросов.
-
-		Returns:
-		        None
-
-		Raises:
-		        None
+		        jwt_token (str): Токен аутентификации для доступа к платформе.
+		        session: Объект сеанса для управления контекстом запросов.
 		"""
+
+		self.session = session
 
 		with open("src/api/useragents/user_agent.txt", encoding="UTF-8") as f:
 			user_agents = f.readlines()
@@ -175,7 +173,7 @@ class Mark:
 						marks[subject_name]["exam"].append(int(estimate_value_name))
 		return marks
 
-	def get_marks(
+	async def get_marks(
 		self,
 		group_id: int,
 		education_id: int,
@@ -210,21 +208,18 @@ class Mark:
 			"p_estimate_types[]": [str(i) for i in [*range(1, 23), 37] if i != 15],
 		}
 
-		response_not_finals = (
-			requests.get(
-				"https://dnevnik2.petersburgedu.ru/api/journal/estimate/table",
-				cookies=self.cookies,
-				params=params,
-				headers=self.headers,
-				timeout=10,
-			)
-			.json()
-			.get("data")
-			.get("items")
-		)
+		async with self.session.get(
+			"https://dnevnik2.petersburgedu.ru/api/journal/estimate/table",
+			cookies=self.cookies,
+			params=params,
+			headers=self.headers,
+			timeout=10,
+		) as response:
+			response = await response.json()
+		not_finals_data = response.get("data").get("items")
 
 		sort_response = sorted(
-			response_not_finals,
+			not_finals_data,
 			key=lambda x: datetime.datetime.strptime(x["date"], "%d.%m.%Y"),
 		)
 
@@ -235,19 +230,15 @@ class Mark:
 			"p_groups[]": group_id,
 			"p_periods[]": period_id,
 		}
-
-		list_subjects = (
-			requests.get(
-				"https://dnevnik2.petersburgedu.ru/api/journal/subject/list-studied",
-				cookies=self.cookies,
-				params=params_list_subjects,
-				headers=self.headers,
-				timeout=10,
-			)
-			.json()
-			.get("data")
-			.get("items")
-		)
+		async with self.session.get(
+			"https://dnevnik2.petersburgedu.ru/api/journal/subject/list-studied",
+			cookies=self.cookies,
+			params=params_list_subjects,
+			headers=self.headers,
+			timeout=10,
+		) as response:
+			response = await response.json()
+		list_subjects = response.get("data").get("items")
 
 		marks = {
 			info_marks_all["name"]: {
@@ -272,18 +263,15 @@ class Mark:
 			"p_limit": "1000",
 			"p_estimate_types[]": [str(i) for i in [*range(23, 36)]],
 		}
-		response_finals = (
-			requests.get(
-				"https://dnevnik2.petersburgedu.ru/api/journal/estimate/table",
-				cookies=self.cookies,
-				params=params,
-				headers=self.headers,
-				timeout=10,
-			)
-			.json()
-			.get("data")
-			.get("items")
-		)
+		async with self.session.get(
+			"https://dnevnik2.petersburgedu.ru/api/journal/estimate/table",
+			cookies=self.cookies,
+			params=params,
+			headers=self.headers,
+			timeout=10,
+		) as response:
+			response = await response.json()
+		response_finals = response.get("data").get("items")
 
 		marks = self.get_marks_finals_dict(response=response_finals, marks=marks)
 
@@ -350,7 +338,7 @@ class Mark:
 			else None,
 		}
 
-	def get_periods(self, group_id: int):
+	async def get_periods(self, group_id: int):
 		"""
 		Получает список периодов для указанной группы из внешнего API.
 		Этот метод фильтрует праздничные периоды и возвращает соответствующие детали для каждого периода.
@@ -371,18 +359,14 @@ class Mark:
 			"p_group_ids[]": group_id,
 			"p_page": "1",
 		}
-
-		response = (
-			requests.get(
-				"https://dnevnik2.petersburgedu.ru/api/group/group/get-list-period",
-				params=params,
-				cookies=self.cookies,
-				headers=self.headers,
-			)
-			.json()
-			.get("data")
-			.get("items")
-		)
+		async with self.session.get(
+			"https://dnevnik2.petersburgedu.ru/api/group/group/get-list-period",
+			params=params,
+			cookies=self.cookies,
+			headers=self.headers,
+		) as response:
+			response = await response.json()
+		response = response.get("data").get("items")
 
 		return {
 			info.get("name"): {

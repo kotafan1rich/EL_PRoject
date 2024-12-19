@@ -1,6 +1,7 @@
 from typing import Union
 from uuid import UUID
 
+import aiohttp
 from fastapi import HTTPException
 
 from .schemas import (
@@ -24,17 +25,19 @@ class MarksCRUD:
 				user_dal = UserDAL(db_session=session)
 				user = await user_dal.get_user_by_id_tg(id_tg)
 				education_id: int = user.education_id
-				group_id: int = user.group_id
 				jwt_token: str = user.jwt_token
 				if jwt_token is not None and education_id:
-					mark = Mark(jwt_token=jwt_token)
-					marks = mark.get_marks(
+					session = aiohttp.ClientSession()
+					mark = Mark(jwt_token=jwt_token, session=session)
+					group_id: int = user.group_id
+					marks = await mark.get_marks(
 						date_from=date_from,
 						date_to=date_to,
 						education_id=education_id,
 						group_id=group_id,
 						period_id=period_id,
 					)
+					await session.close()
 					return MarksResult(result=marks)
 				raise HTTPException(status_code=404, detail="No data")
 
@@ -46,12 +49,15 @@ class MarksCRUD:
 				user_info = await user_dal.get_user_by_id_tg(id_tg=id_tg)
 				group_id: int = user_info.group_id
 				jwt_token: str = user_info.jwt_token
+				session = aiohttp.ClientSession()
 				periods = (
-					Mark(jwt_token=jwt_token).get_periods(group_id=group_id)
+					await Mark(jwt_token=jwt_token, session=session).get_periods(
+						group_id=group_id
+					)
 					if group_id and jwt_token
 					else {}
 				)
-
+				await session.close()
 				return UserPeriodsResponse(result=periods)
 
 
