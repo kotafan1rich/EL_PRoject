@@ -45,6 +45,8 @@ services:
               -c huge_pages=off
               -c min_wal_size=1GB
               -c max_wal_size=4GB
+              -c log_timezone='Europe/Moscow'
+              -c timezone='Europe/Moscow'
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
