@@ -215,6 +215,8 @@ class Mark:
 			headers=self.headers,
 			timeout=10,
 		) as response:
+			if response.status == 401:
+				return None
 			response = await response.json()
 		not_finals_data = response.get("data").get("items")
 
@@ -365,6 +367,8 @@ class Mark:
 			cookies=self.cookies,
 			headers=self.headers,
 		) as response:
+			if response.status == 401:
+				return None
 			response = await response.json()
 		response = response.get("data").get("items")
 

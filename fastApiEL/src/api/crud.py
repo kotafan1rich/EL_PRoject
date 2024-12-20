@@ -38,8 +38,12 @@ class MarksCRUD:
 						period_id=period_id,
 					)
 					await session.close()
-					return MarksResult(result=marks)
-				raise HTTPException(status_code=404, detail="No data")
+					if marks:
+						return MarksResult(result=marks)
+					raise HTTPException(status_code=404, detail="No data")
+				raise HTTPException(
+					status_code=404, detail="No jwt_token or education_id"
+				)
 
 	@staticmethod
 	async def get_user_periods(id_tg: int, db) -> UserPeriodRequest:
@@ -49,16 +53,18 @@ class MarksCRUD:
 				user_info = await user_dal.get_user_by_id_tg(id_tg=id_tg)
 				group_id: int = user_info.group_id
 				jwt_token: str = user_info.jwt_token
-				session = aiohttp.ClientSession()
-				periods = (
-					await Mark(jwt_token=jwt_token, session=session).get_periods(
-						group_id=group_id
-					)
-					if group_id and jwt_token
-					else {}
+				if jwt_token is not None and group_id:
+					session = aiohttp.ClientSession()
+					periods = await Mark(
+						jwt_token=jwt_token, session=session
+					).get_periods(group_id=group_id)
+					await session.close()
+					if periods:
+						return UserPeriodsResponse(result=periods)
+					raise HTTPException(status_code=404, detail="No data")
+				raise HTTPException(
+					status_code=404, detail="No jwt_token or group_id"
 				)
-				await session.close()
-				return UserPeriodsResponse(result=periods)
 
 
 class UserCRUD:
