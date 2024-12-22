@@ -25,14 +25,15 @@ services:
     image: postgres:17
     volumes:
       - db_data:/var/lib/postgresql/data
-      - ./postgresql.conf:/var/lib/postgresql/data/pgdata/postgresql.conf
+      - ./postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./pg_hba.conf:/var/lib/postgresql/data/pg_hba.conf
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=2007Fj2007
       - POSTGRES_HOST_AUTH_METHOD=md5
-      - POSTGRES_DB=postgres
-    command: postgres -c config_file=/var/lib/postgresql/data/pgdata/postgresql.conf
+      - POSTGRES_DB=el_api
+    command: postgres -c config_file=/etc/postgresql/postgresql.conf
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
