@@ -25,28 +25,14 @@ services:
     image: postgres:17
     volumes:
       - db_data:/var/lib/postgresql/data
+      - ./postgresql.conf:/var/lib/postgresql/data/pgdata/postgresql.conf
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=2007Fj2007
       - POSTGRES_HOST_AUTH_METHOD=md5
       - POSTGRES_DB=postgres
-    command: >
-      postgres -c max_connections=200
-              -c shared_buffers=64MB
-              -c effective_cache_size=192MB
-              -c maintenance_work_mem=16MB
-              -c checkpoint_completion_target=0.9
-              -c wal_buffers=1966kB
-              -c default_statistics_target=100
-              -c random_page_cost=1.1
-              -c effective_io_concurrency=200
-              -c work_mem=163kB
-              -c huge_pages=off
-              -c min_wal_size=1GB
-              -c max_wal_size=4GB
-              -c log_timezone='Europe/Moscow'
-              -c timezone='Europe/Moscow'
+    command: postgres -c config_file=/var/lib/postgresql/data/pgdata/postgresql.conf
 
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
@@ -54,10 +40,6 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
-    expose:
-      - 5432
-    ports:
-      - "5432:5432"
 
 volumes:
   db_data:
