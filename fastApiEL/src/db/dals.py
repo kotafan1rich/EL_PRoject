@@ -1,4 +1,3 @@
-import logging
 from typing import Union
 from uuid import UUID
 
@@ -13,7 +12,6 @@ class UserDAL:
         self.db_session = db_session
 
     async def create_user(self, id_tg: int) -> User:
-        logging.info(id_tg)
         new_user = User(id_tg=id_tg)
         self.db_session.add(new_user)
         await self.db_session.flush()

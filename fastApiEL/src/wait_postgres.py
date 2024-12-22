@@ -29,11 +29,11 @@ async def check_postgres():
 
 
 async def main():
-	for _ in range(30):  # Попытаться подключиться 30 раз
+	for _ in range(30):
 		if await check_postgres():
 			sys.exit(0)
 		await asyncio.sleep(1)
-	sys.exit(1)  # Если за 30 попыток база не стала доступна
+	sys.exit(1)
 
 
 if __name__ == "__main__":

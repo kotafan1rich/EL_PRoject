@@ -14,7 +14,6 @@ class UpdateUserResponse(TunedModel):
 
 
 class UpdateUserRequest(TunedModel):
-    user_id: Union[None, int] = None
     education_id: Union[None, int] = None
     group_id: Union[None, int] = None
     jwt_token: Union[None, str] = None
