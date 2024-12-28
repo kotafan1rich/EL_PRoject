@@ -52,3 +52,8 @@ async def update_user_by_id_tg(
 		update_user_params=update_user_params, id_tg=id_tg, db=db
 	)
 	return UpdateUserResponse(updated_id_tg=updated_id_tg)
+
+
+@user_router.delete("delete", response_model=UpdateUserResponse)
+async def delete_user_by_id_tg(id_tg: int, db: AsyncSession = Depends(get_db)) -> UpdateUserResponse:
+	return await UserCRUD.delete_user_by_id_tg(id_tg=id_tg, db=db)

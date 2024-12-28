@@ -102,3 +102,13 @@ class UserCRUD:
 			async with session.begin():
 				user_dal = UserDAL(session)
 				return await user_dal.update_user_by_tg_id(id_tg, **update_user_params)
+
+	@staticmethod
+	async def delete_user_by_id_tg(id_tg: int, db) -> Union[UpdateUserResponse, None]:
+		async with db as session:
+			async with session.begin():
+				user_dal = UserDAL(session)
+				deleted_id_tg = await user_dal.delete_user_by_tg_id(id_tg)
+				if deleted_id_tg:
+					return UpdateUserResponse(updated_id_tg=deleted_id_tg)
+				raise HTTPException(status_code=404, detail="User does not exist")
