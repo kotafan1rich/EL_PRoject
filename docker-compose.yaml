@@ -22,7 +22,7 @@ services:
 
   db:
     container_name: db
-    image: docker:17-bullseye
+    image: postgres:17-bullseye
 
     volumes:
       - db_data:/var/lib/postgresql/data
