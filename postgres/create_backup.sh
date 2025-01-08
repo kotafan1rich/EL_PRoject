@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Параметры
-CONTAINER_NAME="postgres"          # Название контейнера из docker-compose.yml
+CONTAINER_NAME="db"          # Название контейнера из docker-compose.yml
 BACKUP_DIR="./postgres/backups"             # Папка для хранения бэкапов
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S") # Метка времени
 BACKUP_FILE="$BACKUP_DIR/db_backup_$TIMESTAMP.sql"

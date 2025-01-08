@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Параметры
-CONTAINER_NAME="postgres"          # Название контейнера из docker-compose.yml
+CONTAINER_NAME="db"          # Название контейнера из docker-compose.yml
 BACKUP_DIR="./postgres/backups"             # Папка с бэкапами
 POSTGRES_USER="postgres"           # Имя пользователя PostgreSQL
 POSTGRES_DB="min_db"               # Имя базы данных
