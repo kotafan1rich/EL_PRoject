@@ -8,7 +8,7 @@ BACKUP_FILE="$BACKUP_DIR/db_backup_$TIMESTAMP.sql"
 
 # Данные для подключения
 POSTGRES_USER="postgres"           # Имя пользователя PostgreSQL
-POSTGRES_DB="min_db"               # Имя базы данных
+POSTGRES_DB="el_api"               # Имя базы данных
 POSTGRES_PASSWORD="2007Fj2007"     # Пароль пользователя
 
 # Проверяем, существует ли папка для бэкапов, если нет — создаем

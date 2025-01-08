@@ -4,7 +4,7 @@
 CONTAINER_NAME="db"          # Название контейнера из docker-compose.yml
 BACKUP_DIR="./postgres/backups"             # Папка с бэкапами
 POSTGRES_USER="postgres"           # Имя пользователя PostgreSQL
-POSTGRES_DB="min_db"               # Имя базы данных
+POSTGRES_DB="el_api"               # Имя базы данных
 POSTGRES_PASSWORD="2007Fj2007"     # Пароль пользователя
 
 # Проверяем наличие папки с бэкапами
