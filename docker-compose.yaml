@@ -22,7 +22,7 @@ services:
 
   db:
     container_name: db
-    image: postgres:17
+    image: postgres:alpine
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf

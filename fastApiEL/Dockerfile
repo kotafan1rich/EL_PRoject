@@ -1,5 +1,5 @@
 # Используем базовый образ Python
-FROM python:3.9
+FROM python:3.9-slim
 
 RUN mkdir /fastapi_app
 
