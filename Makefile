@@ -27,6 +27,10 @@ migrate:
 makemigrations:
 	docker exec -it api alembic revision --autogenerate -m "chande auto"
 
+backup:
+	./postgres/create_backup.sh
+restore:
+	./postgres/restore_db.sh
 
 rebuild: down build up
 
