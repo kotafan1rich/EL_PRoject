@@ -22,7 +22,8 @@ services:
 
   db:
     container_name: db
-    image: docker:17.2-alpine3.21
+    image: docker:17-bullseye
+
     volumes:
       - db_data:/var/lib/postgresql/data
       - ./postgres/postgresql.conf:/etc/postgresql/postgresql.conf
