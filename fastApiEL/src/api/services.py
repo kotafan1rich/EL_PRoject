@@ -1,4 +1,5 @@
 import datetime
+import logging
 import random
 
 from aiohttp import ClientSession
@@ -84,7 +85,7 @@ class Mark:
 		}
 
 	@staticmethod
-	def get_target_grade(marks: list[int], average: float):
+	def get_target_grade(marks: list[int], average: float) -> str:
 		"""
 		Вычисляет целевую оценку на основе предоставленных оценок и их среднего значения.
 		Этот метод определяет, сколько дополнительных баллов необходимо для достижения целевой средней оценки 4.5.
@@ -105,7 +106,7 @@ class Mark:
 			return f"{int((4.5 * len(marks) - sum(marks)) / 0.5)}+"
 
 	@staticmethod
-	def get_marks_not_finals_dict(response: list, marks: dict):
+	def get_marks_not_finals_dict(response: list, marks: dict) -> dict:
 		"""
 		Обрабатывает список данных оценок и обновляет словарь с промежуточными оценками для каждого предмета.
 		Этот метод добавляет оценки в соответствующий список в предоставленном словаре, исключая зачетные оценки.
@@ -127,14 +128,14 @@ class Mark:
 		for subject_data in marks_info:
 			subject_name = subject_data["subject_name"]
 			estimate_value_name = subject_data["estimate_value_name"]
-
-			if estimate_value_name != "Зачёт":
+			logging.info(subject_data)
+			if estimate_value_name.isdigit():
 				marks[subject_name]["q_marks"].append(int(estimate_value_name))
 
 		return marks
 
 	@staticmethod
-	def get_marks_finals_dict(response: list, marks: dict):
+	def get_marks_finals_dict(response: list, marks: dict) -> dict:
 		"""
 		Обрабатывает список данных оценок и обновляет словарь с итоговыми оценками для каждого предмета.
 		Этот метод классифицирует оценки по типу и добавляет их в соответствующие списки в предоставленном словаре.
@@ -204,8 +205,8 @@ class Mark:
 			"p_educations[]": education_id,
 			"p_date_from": date_from,
 			"p_date_to": date_to,
-			"p_limit": "1000",
-			"p_estimate_types[]": [str(i) for i in [*range(1, 23), 37] if i != 15],
+			"p_limit": "10000",
+			"p_estimate_types[]": [str(i) for i in [*range(1, 23), 37]],
 		}
 
 		async with self.session.get(
