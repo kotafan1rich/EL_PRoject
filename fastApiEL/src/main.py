@@ -1,9 +1,15 @@
+import logging
 from fastapi.routing import APIRouter
 
 from src.api.user_handlers import user_router
 from src.api.marks_handlers import marks_router
 
 from fastapi import FastAPI
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
+logger = logging.getLogger(__name__)
 
 app = FastAPI(title="EL_Api")
 
